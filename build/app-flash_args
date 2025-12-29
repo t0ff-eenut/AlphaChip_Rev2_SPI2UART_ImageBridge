@@ -1,2 +1,2 @@
 --flash_mode dio --flash_freq 80m --flash_size 2MB
-0x10000 tusb_console.bin
+0x10000 AlphaChip_Rev2_SPI2UART_ImageBridge.bin

@@ -1,3 +1,52 @@
+## 1.7.6~2
+
+- esp_tinyusb: Added support for IDF 6.0 after removal of the USB component
+
+## 1.7.6~1
+
+- esp_tinyusb: Added documentation to README.md
+
+## 1.7.6
+
+- MSC: Fixed the possibility to use SD/MMC storage with large capacity (more than 4 GB)
+
+## 1.7.5
+
+- esp_tinyusb: Provide forward compatibility with IDF 6.0
+
+## 1.7.4
+
+- MSC: WL Sector runtime check during spiflash init (fix for build time error check)
+
+## 1.7.3 [yanked]
+
+- MSC: Improved transfer speed to SD cards and SPI flash
+
+## 1.7.2
+
+- esp_tinyusb: Fixed crash on logging from ISR
+- PHY: Fixed crash with external_phy=true configuration
+
+## 1.7.1
+
+- NCM: Changed default NTB config to decrease DRAM memory usage (fix for DRAM overflow on ESP32S2)
+
+## 1.7.0 [yanked]
+
+- NCM: Added possibility to configure NCM Transfer Blocks (NTB) via menuconfig
+- esp_tinyusb: Added option to select TinyUSB peripheral on esp32p4 via menuconfig (USB_PHY_SUPPORTS_P4_OTG11 in esp-idf is required)
+- esp_tinyusb: Fixed uninstall tinyusb driver with not default task configuration
+
+## 1.6.0
+
+- CDC-ACM: Fixed memory leak on deinit
+- esp_tinyusb: Added Teardown
+
+## 1.5.0
+
+- esp_tinyusb: Added DMA mode option to tinyusb DCD DWC2 configuration
+- esp_tinyusb: Changed the default affinity mask of the task to CPU1
+
 ## 1.4.5
 
 - CDC-ACM: Fixed memory leak at VFS unregister

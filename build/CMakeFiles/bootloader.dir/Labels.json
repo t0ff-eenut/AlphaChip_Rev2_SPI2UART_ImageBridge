@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/CMakeFiles/bootloader"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/CMakeFiles/bootloader.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "C:/Users/FW_1/Desktop/Debug_250724/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		}
 	],
 	"target" : 

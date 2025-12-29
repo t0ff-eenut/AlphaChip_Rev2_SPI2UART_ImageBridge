@@ -6,4 +6,4 @@ add_compile_options(-w) # Turn off warnings until esp_tinyusb is updated IEC-86
 # "Trim" the build. Include the minimal set of components, main, and anything it depends on.
 set(COMPONENTS main)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(tusb_console)
+project(AlphaChip_Rev2_SPI2UART_ImageBridge)

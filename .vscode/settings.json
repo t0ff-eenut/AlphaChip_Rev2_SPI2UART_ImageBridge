@@ -22,5 +22,6 @@
   },
   "idf.espIdfPathWin": "C:\\Users\\FW_1\\esp\\v5.3.3\\esp-idf",
   "idf.toolsPathWin": "C:\\Users\\FW_1\\.espressif",
-  "idf.pythonInstallPath": "C:\\Users\\FW_1\\.espressif\\tools\\idf-python\\3.11.2\\python.exe"
+  "idf.pythonInstallPath": "C:\\Users\\FW_1\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
+  "editor.formatOnSave": false
 }
