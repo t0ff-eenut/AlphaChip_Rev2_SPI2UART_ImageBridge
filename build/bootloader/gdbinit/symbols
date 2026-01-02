@@ -17,4 +17,4 @@ set confirm off
 set confirm on
 
 # Load application symbols
-file C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader/bootloader.elf
+file C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build/bootloader/bootloader.elf

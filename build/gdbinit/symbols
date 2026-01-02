@@ -13,8 +13,8 @@ end
 
 # Load bootloader symbols
 set confirm off
-    add-symbol-file C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/bootloader/bootloader.elf
+    add-symbol-file C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build/bootloader/bootloader.elf
 set confirm on
 
 # Load application symbols
-file C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/AlphaChip_Rev2_SPI2UART_ImageBridge.elf
+file C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build/AlphaChip_Rev2_SPI2UART_ImageBridge.elf

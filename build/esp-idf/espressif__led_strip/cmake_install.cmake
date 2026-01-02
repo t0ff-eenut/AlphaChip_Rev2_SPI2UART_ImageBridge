@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/managed_components/espressif__led_strip
+# Install script for directory: C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/managed_components/espressif__led_strip
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

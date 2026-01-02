@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/FW_1/Desktop/Debug_250819/ESP_USB_UART_SPI_Reciver_250819/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)
