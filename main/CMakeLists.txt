@@ -8,11 +8,10 @@ INCLUDE_DIRS
     "hw_level"                                   # hw_level_top.h, hw_level_handle.h
     "hw_level/custom_esp_gpio"
     # "hw_level/custom_esp_nvs"
-    # "hal_level"                                  # hal_level_top.h, hal_level_handle.h
-    # "hal_level/custom_esp_queue"
-    # "hal_level/custom_esp_adc"
-    # "hal_level/custom_esp_uart"
-    # "hal_level/custom_esp_spi"
+    "hal_level"                                  # hal_level_top.h, hal_level_handle.h
+    "hal_level/custom_esp_queue"
+    "hal_level/custom_esp_uart"
+    "hal_level/custom_esp_spi"
     # "app_level"
     # "app_level/image_processing"
 REQUIRES 

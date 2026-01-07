@@ -1,6 +1,6 @@
 /*
  * Automatically generated file. DO NOT EDIT.
- * Espressif IoT Development Framework (ESP-IDF) 5.3.3 Configuration Header
+ * Espressif IoT Development Framework (ESP-IDF) 5.3.4 Configuration Header
  */
 #pragma once
 #define CONFIG_SOC_MPU_MIN_REGION_SIZE 0x20000000
@@ -102,7 +102,7 @@
 #define CONFIG_SOC_HP_CPU_HAS_MULTIPLE_CORES 1
 #define CONFIG_SOC_CPU_BREAKPOINTS_NUM 2
 #define CONFIG_SOC_CPU_WATCHPOINTS_NUM 2
-#define CONFIG_SOC_CPU_WATCHPOINT_MAX_REGION_SIZE 64
+#define CONFIG_SOC_CPU_WATCHPOINT_MAX_REGION_SIZE 0x40
 #define CONFIG_SOC_SIMD_PREFERRED_DATA_ALIGNMENT 16
 #define CONFIG_SOC_DS_SIGNATURE_MAX_BIT_LEN 4096
 #define CONFIG_SOC_DS_KEY_PARAM_MD_IV_LENGTH 16

@@ -1027,7 +1027,7 @@
         "name": "SOC_CPU_WATCHPOINT_MAX_REGION_SIZE",
         "range": null,
         "title": null,
-        "type": "int"
+        "type": "hex"
     },
     {
         "children": [],
@@ -2077,7 +2077,7 @@
         "name": "SOC_SDM_GROUPS",
         "range": null,
         "title": null,
-        "type": "bool"
+        "type": "int"
     },
     {
         "children": [],
@@ -5009,6 +5009,16 @@
             },
             {
                 "children": [],
+                "depends_on": "SECURE_BOOT_V2_ENABLED",
+                "help": "If not set (default, recommended), on first boot the bootloader will burn the WR_DIS_RD_DIS\nefuse when Secure Boot is enabled. This prevents any more efuses from being read protected.\n\nIf this option is set, it will remain possible to write the EFUSE_RD_DIS efuse field after Secure\nBoot is enabled. This may allow an attacker to read-protect the BLK2 efuse (for ESP32) and\nBLOCK4-BLOCK10 (i.e. BLOCK_KEY0-BLOCK_KEY5)(for other chips) holding the secure boot public key digest,\ncausing an immediate denial of service and possibly allowing an additional fault injection attack to\nbypass the signature protection.\n\nThe option must be set when you need to program any read-protected key type into the efuses,\ne.g., HMAC, ECDSA etc. after secure boot has already been enabled on the device.\nPlease refer to secure boot V2 documentation guide for more details.\n\nNOTE: Once a BLOCK is read-protected, the application will read all zeros from that block\n\nNOTE: If \"UART ROM download mode (Permanently disabled (recommended))\" or\n\"UART ROM download mode (Permanently switch to Secure mode (recommended))\" is set,\nthen it is __NOT__ possible to read/write efuses using espefuse.py utility.\nHowever, efuse can be read/written from the application\n\nPlease refer to the Secure Boot V2 documentation guide for more information.",
+                "id": "SECURE_BOOT_V2_ALLOW_EFUSE_RD_DIS",
+                "name": "SECURE_BOOT_V2_ALLOW_EFUSE_RD_DIS",
+                "range": null,
+                "title": "Do not disable the ability to further read protect eFuses",
+                "type": "bool"
+            },
+            {
+                "children": [],
                 "depends_on": "SECURE_BOOT_V2_ENABLED && SECURE_BOOT_BUILD_SIGNED_BINARIES",
                 "help": "When Secure Boot V2 is enabled, by default the bootloader is not flashed along with other artifacts\nlike the application and the partition table images, i.e. bootloader has to be separately flashed\nusing the command `idf.py bootloader flash`, whereas, the application and partition table can be flashed\nusing the command `idf.py flash` itself.\nEnabling this option allows flashing the bootloader along with the other artifacts\nby invocation of the command `idf.py flash`.\n\nIf this option is enabled make sure that even the bootloader is signed using the correct secure boot key,\notherwise the bootloader signature verification would fail, as hash of the public key which is present in\nthe bootloader signature would not match with the digest stored into the efuses\nand thus the device will not be able to boot up.",
                 "id": "SECURE_BOOT_FLASH_BOOTLOADER_DEFAULT",
@@ -5178,16 +5188,6 @@
                         "name": "SECURE_BOOT_ALLOW_SHORT_APP_PARTITION",
                         "range": null,
                         "title": "Allow app partition length not 64KB aligned",
-                        "type": "bool"
-                    },
-                    {
-                        "children": [],
-                        "depends_on": "SECURE_BOOT_INSECURE && SECURE_BOOT_V2_ENABLED",
-                        "help": "If not set (default, recommended), on first boot the bootloader will burn the WR_DIS_RD_DIS\nefuse when Secure Boot is enabled. This prevents any more efuses from being read protected.\n\nIf this option is set, it will remain possible to write the EFUSE_RD_DIS efuse field after Secure\nBoot is enabled. This may allow an attacker to read-protect the BLK2 efuse (for ESP32) and\nBLOCK4-BLOCK10 (i.e. BLOCK_KEY0-BLOCK_KEY5)(for other chips) holding the public key digest, causing an\nimmediate denial of service and possibly allowing an additional fault injection attack to\nbypass the signature protection.\n\nNOTE: Once a BLOCK is read-protected, the application will read all zeros from that block\n\nNOTE: If \"UART ROM download mode (Permanently disabled (recommended))\" or\n\"UART ROM download mode (Permanently switch to Secure mode (recommended))\" is set,\nthen it is __NOT__ possible to read/write efuses using espefuse.py utility.\nHowever, efuse can be read/written from the application",
-                        "id": "SECURE_BOOT_V2_ALLOW_EFUSE_RD_DIS",
-                        "name": "SECURE_BOOT_V2_ALLOW_EFUSE_RD_DIS",
-                        "range": null,
-                        "title": "Allow additional read protecting of efuses",
                         "type": "bool"
                     },
                     {
@@ -5362,7 +5362,7 @@
                     {
                         "children": [],
                         "depends_on": "SOC_SUPPORTS_SECURE_DL_MODE && <choice SECURE_UART_ROM_DL_MODE>",
-                        "help": "If set, during startup the app will burn an eFuse bit to permanently switch the UART ROM\nDownload Mode into a separate Secure Download mode. This option can only work if\nDownload Mode is not already disabled by eFuse.\n\nSecure Download mode limits the use of Download Mode functions to update SPI config,\nchanging baud rate, basic flash write and a command to return a summary of currently\nenabled security features (`get_security_info`).\n\nSecure Download mode is not compatible with the esptool.py flasher stub feature,\nespefuse.py, read/writing memory or registers, encrypted download, or any other\nfeatures that interact with unsupported Download Mode commands.\n\nSecure Download mode should be enabled in any application where Flash Encryption\nand/or Secure Boot is enabled. Disabling this option does not immediately cancel\nthe benefits of the security features, but it increases the potential \"attack\nsurface\" for an attacker to try and bypass them with a successful physical attack.\n\nIt is also possible to enable secure download mode at runtime by calling\nesp_efuse_enable_rom_secure_download_mode()\n\nNote: Secure Download mode is not available for ESP32 (includes revisions till ECO3).",
+                        "help": "If set, during startup the app will burn an eFuse bit to permanently switch the UART ROM\nDownload Mode into a separate Secure Download mode. This option can only work if\nDownload Mode is not already disabled by eFuse.\n\nSecure Download mode limits the use of Download Mode functions to update SPI config,\nchanging baud rate, basic flash write and a command to return a summary of currently\nenabled security features (`get_security_info`).\n\nSecure Download mode is not compatible with the esptool.py flasher stub feature,\nespefuse.py, read/writing memory or registers, encrypted download, or any other\nfeatures that interact with unsupported Download Mode commands.\n\nSecure Download mode should be enabled in any application where Flash Encryption\nand/or Secure Boot is enabled. Disabling this option does not immediately cancel\nthe benefits of the security features, but it increases the potential \"attack\nsurface\" for an attacker to try and bypass them with a successful physical attack.\n\nIt is also possible to enable secure download mode at runtime by calling\nesp_efuse_enable_rom_secure_download_mode()\n\nNote: Secure Download mode is not available for ESP32.",
                         "id": "SECURE_ENABLE_SECURE_ROM_DL_MODE",
                         "name": "SECURE_ENABLE_SECURE_ROM_DL_MODE",
                         "range": null,
@@ -7122,6 +7122,24 @@
                         "children": [
                             {
                                 "children": [],
+                                "depends_on": "SOC_I2C_SUPPORTED",
+                                "help": "This configuration option allows the user to bypass the conflict check mechanism with legacy code.",
+                                "id": "I2C_SKIP_LEGACY_CONFLICT_CHECK",
+                                "name": "I2C_SKIP_LEGACY_CONFLICT_CHECK",
+                                "range": null,
+                                "title": "Skip legacy conflict check",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "SOC_I2C_SUPPORTED",
+                        "id": "component-config-driver-configurations-legacy-i2c-driver-configurations",
+                        "title": "Legacy I2C Driver Configurations",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
                                 "depends_on": "SOC_PCNT_SUPPORTED",
                                 "help": "whether to suppress the deprecation warnings when using legacy PCNT driver (driver/pcnt.h).\nIf you want to continue using the legacy driver, and don't want to see related deprecation warnings,\nyou can enable this option.",
                                 "id": "PCNT_SUPPRESS_DEPRECATE_WARN",
@@ -8770,6 +8788,16 @@
                         "range": null,
                         "title": null,
                         "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "SOC_ECDSA_P192_CURVE_DEFAULT_DISABLED",
+                        "help": "By default, only the 256-bit curve operations are allowed. If this configuration is enabled,\nit will set the eFuse to allow ECDSA operations using both the 192-bit and 256-bit curves",
+                        "id": "ESP_ECDSA_ENABLE_P192_CURVE",
+                        "name": "ESP_ECDSA_ENABLE_P192_CURVE",
+                        "range": null,
+                        "title": "Enable ECDSA 192-curve operations",
+                        "type": "bool"
                     }
                 ],
                 "depends_on": null,
@@ -9044,7 +9072,7 @@
                     {
                         "children": [],
                         "depends_on": "SOC_PM_SUPPORT_TOP_PD && SOC_PAU_SUPPORTED",
-                        "help": "If enabled, digital peripherals will be powered down in light sleep, it will reduce sleep\ncurrent consumption by about 100 uA. Chip will save/restore register context at sleep/wake\ntime to keep the system running. Enabling this option will increase static RAM and heap usage,\nthe actual cost depends on the peripherals you have initialized. In order to save/restore the\ncontext of the necessary hardware for FreeRTOS to run, it will need at least 4.55 KB free heap\nat sleep time. Otherwise sleep will not power down the peripherals.\n\nNote1: Please use this option with caution, the current IDF does not support the retention of\nall peripherals. When the digital peripherals are powered off and a sleep and wake-up is completed,\nthe peripherals that have not saved the running context are equivalent to performing a reset.\n!!! Please confirm the peripherals used in your application and their sleep retention support status\nbefore enabling this option, peripherals sleep retention driver support status is tracked in\npower_management.rst\n\nNote2: When this option is enabled simultaneously with FREERTOS_USE_TICKLESS_IDLE, since the UART will\nbe powered down, the uart FIFO will be flushed before sleep to avoid data loss, however, this has the\npotential to block the sleep process and cause the wakeup time to be skipped, which will cause the tick\nof freertos to not be compensated correctly when returning from sleep and cause the system to crash.\nTo avoid this, you can increase FREERTOS_IDLE_TIME_BEFORE_SLEEP threshold in menuconfig.",
+                        "help": "If enabled, digital peripherals will try to powered down in light sleep, then all related peripherals will\nnot be available during sleep, including wake-up sources from the peripherals (For detailed availability\ninformation, see the note of the corresponding wakeup source enable function).\nThe chip will automatically save/restore register context during sleep/wakeup to make the upper layer\nuser unaware of the peripheral powerdown during sleep. Enabling this option will increase static RAM and\nheap usage but will also significantly reduce power.\nconsumption during lightsleep, the actual memory cost depends on the peripherals you have initialized,\nfor specific power consumption data in this mode, please refer to Electrical Characteristics section\nin the chip datasheet.\n(In order to save/restore the context of the necessary hardware for FreeRTOS to run, it will need\nat least 4.55 KB free heap at sleep time. Otherwise sleep will not power down the peripherals.)\n\nNote1: Please use this option with caution, the current IDF does not support the retention of\nall peripherals. When the digital peripherals are powered off and a sleep and wake-up is completed,\nthe peripherals that have not saved the running context are equivalent to performing a reset.\n!!! Please confirm the peripherals used in your application and their sleep retention support status\nbefore enabling this option, peripherals sleep retention driver support status is tracked in\npower_management.rst\n\nNote2: When this option is enabled simultaneously with FREERTOS_USE_TICKLESS_IDLE, since the UART will\nbe powered down, the uart FIFO will be flushed before sleep to avoid data loss, however, this has the\npotential to block the sleep process and cause the wakeup time to be skipped, which will cause the tick\nof freertos to not be compensated correctly when returning from sleep and cause the system to crash.\nTo avoid this, you can increase FREERTOS_IDLE_TIME_BEFORE_SLEEP threshold in menuconfig.\n\nNote3: Enabling this option does not necessarily mean that the peripheral power domain will be\nturned down during sleep. The control priority of `esp_sleep_pd_config` is higher than this option,\nuser code can still prevent the peripheral power domain from powering down during sleep by\n`esp_sleep_pd_config(ESP_PD_DOMAIN_TOP, ESP_PD_OPTION_ON)`. In addition, whether the peripheral power\ndomain is powered down during sleep also depends on the sleep working strategy selected by the driver.\nIf any module belonging to the peripheral power domain chooses not to be powered down during sleep,\nthen the peripheral power domain will not be powered off either.",
                         "id": "PM_POWER_DOWN_PERIPHERAL_IN_LIGHT_SLEEP",
                         "name": "PM_POWER_DOWN_PERIPHERAL_IN_LIGHT_SLEEP",
                         "range": null,
@@ -12217,8 +12245,8 @@
                     },
                     {
                         "children": [],
-                        "depends_on": "!HEAP_TLSF_USE_ROM_IMPL",
-                        "help": "Enable this flag to save up RAM space by placing the heap component in the flash memory\n\nNote that it is only safe to enable this configuration if no functions from esp_heap_caps.h\nor esp_heap_trace.h are called from ISR.",
+                        "depends_on": null,
+                        "help": "Enable this flag to save up RAM space by placing the heap component in the flash memory\n\nNote that it is only safe to enable this configuration if no functions from esp_heap_caps.h\nor esp_heap_trace.h are called from IRAM ISR which runs when cache is disabled.",
                         "id": "HEAP_PLACE_FUNCTION_INTO_FLASH",
                         "name": "HEAP_PLACE_FUNCTION_INTO_FLASH",
                         "range": null,
@@ -12950,6 +12978,16 @@
                                         "name": "LWIP_DHCPS_STATIC_ENTRIES",
                                         "range": null,
                                         "title": "Enable ARP static entries",
+                                        "type": "bool"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "LWIP_DHCPS",
+                                        "help": "This allows the DNS option to be optional in the DHCP offers,\ndepending on the server's runtime configuration.\nWhen enabled, the DHCP server will always add the DNS option to DHCP responses.\nIf a DNS server is not explicitly configured, the server's IP address will be used\nas the fallback for the DNS option.\nWhen disabled, the DHCP server will only include the DNS option in responses\nif a DNS server has been explicitly configured.\nThis option will be removed in IDF v6.x",
+                                        "id": "LWIP_DHCPS_ADD_DNS",
+                                        "name": "LWIP_DHCPS_ADD_DNS",
+                                        "range": null,
+                                        "title": "Always add DNS option in DHCP responses",
                                         "type": "bool"
                                     }
                                 ],
@@ -14808,6 +14846,16 @@
                             },
                             {
                                 "children": [],
+                                "depends_on": "MBEDTLS_TLS_ENABLED",
+                                "help": "Enable shared symmetric keys export for TLS sessions using mbedtls_ssl_export_keying_material()\nafter SSL handshake. The process for deriving the keys is specified in RFC 5705 for TLS 1.2\nand in RFC 8446, Section 7.5, for TLS 1.3.",
+                                "id": "MBEDTLS_SSL_KEYING_MATERIAL_EXPORT",
+                                "name": "MBEDTLS_SSL_KEYING_MATERIAL_EXPORT",
+                                "range": null,
+                                "title": "Enable keying material export",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
                                 "depends_on": "MBEDTLS_X509_CRL_PARSE_C",
                                 "help": "Enable PKCS #7 core for using PKCS #7-formatted signatures.",
                                 "id": "MBEDTLS_PKCS7_C",
@@ -15311,6 +15359,16 @@
                         "name": "MBEDTLS_ECDSA_DETERMINISTIC",
                         "range": null,
                         "title": "Enable deterministic ECDSA",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Enabling MBEDTLS_SHA1_C adds support for SHA-1.\nSHA-1 is considered a weak message digest and its use constitutes\na security risk.\nDisabling this configuration option could impact TLS 1.2 / Wi-Fi Enterprise compatibility\nwith certain older certificates that rely on SHA-1 for digital signatures.\nBefore proceeding, ensure that all your certificates are using stronger hash algorithms,\nsuch as SHA-256 (part of the SHA-2 family).\nIf you're using older certificates or if you're unsure about the impact on your product,\nplease consider testing the changes in a controlled environment for individual features\nlike OTA updates, cloud connectivity, secure local control, etc.",
+                        "id": "MBEDTLS_SHA1_C",
+                        "name": "MBEDTLS_SHA1_C",
+                        "range": null,
+                        "title": "Enable the SHA-1 cryptographic hash algorithm",
                         "type": "bool"
                     },
                     {
@@ -16062,6 +16120,16 @@
                         "range": null,
                         "title": "Enable functions that use the filesystem",
                         "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "This options allows weak certificate verification by skipping the hostname verification.\nIt is not recommended to use this option.",
+                        "id": "MBEDTLS_ALLOW_WEAK_CERTIFICATE_VERIFICATION",
+                        "name": "MBEDTLS_ALLOW_WEAK_CERTIFICATE_VERIFICATION",
+                        "range": null,
+                        "title": "Allow weak certificate verification",
+                        "type": "bool"
                     }
                 ],
                 "depends_on": null,
@@ -16571,6 +16639,16 @@
                             },
                             {
                                 "children": [],
+                                "depends_on": "!APP_BUILD_TYPE_PURE_RAM_APP",
+                                "help": "Flash suspend has defect on ESP32C6 until v0.2 and ESP32H2 until v1.2. If you already use suspend\nfeature for massive protection, you can enable this for bypassing check after knowing the risk.\nBut if you are new users, or developing new applications, or producing a new batch,\nplease DO NOT enable this config option.\n\nFor more information, please refer to errata or connect to Espressif business support team.",
+                                "id": "SPI_FLASH_FORCE_ENABLE_C6_H2_SUSPEND",
+                                "name": "SPI_FLASH_FORCE_ENABLE_C6_H2_SUSPEND",
+                                "range": null,
+                                "title": "Enable chip suspend feature on c6 or h2 anyway (DO NOT ENABLE FOR NEW USERS OR APPLICATIONS)",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
                                 "depends_on": "SPI_FLASH_AUTO_SUSPEND && FREERTOS_UNICORE && IDF_EXPERIMENTAL_FEATURES && !APP_BUILD_TYPE_PURE_RAM_APP",
                                 "help": "Enable this config will disable auto-resume from hardware. Thus the software will resume the chip\nafter any higher priority task/interrupt which suspend the chip. The benefit is that the suspend-resume\nwill not disturb the higher priority task and interrupt.\n\nThis currently is only valid on single core chip.",
                                 "id": "SPI_FLASH_SOFTWARE_RESUME",
@@ -16637,7 +16715,7 @@
                             }
                         ],
                         "depends_on": "!SPI_FLASH_ROM_IMPL && !APP_BUILD_TYPE_PURE_RAM_APP",
-                        "help": "If this option is enabled, any time SPI flash is written then the data will be read\nback and verified. This can catch hardware problems with SPI flash, or flash which\nwas not erased before verification.",
+                        "help": "If this option is enabled, any time SPI flash is written then the data will be read\nback and verified. This can catch hardware problems with SPI flash, or flash which\nwas not erased before verification.\n\nThis will slightly influence the write performance.",
                         "id": "SPI_FLASH_VERIFY_WRITE",
                         "name": "SPI_FLASH_VERIFY_WRITE",
                         "range": null,
@@ -17091,16 +17169,6 @@
                                             {
                                                 "children": [],
                                                 "depends_on": "IDF_EXPERIMENTAL_FEATURES && USB_HOST_HUBS_SUPPORTED && SOC_USB_OTG_SUPPORTED",
-                                                "help": "Enables support of Low-speed devices, connected through the external Hub.",
-                                                "id": "USB_HOST_EXT_PORT_SUPPORT_LS",
-                                                "name": "USB_HOST_EXT_PORT_SUPPORT_LS",
-                                                "range": null,
-                                                "title": "Support LS",
-                                                "type": "bool"
-                                            },
-                                            {
-                                                "children": [],
-                                                "depends_on": "IDF_EXPERIMENTAL_FEATURES && USB_HOST_HUBS_SUPPORTED && SOC_USB_OTG_SUPPORTED",
                                                 "help": "Amount of attempts to reset the device.\n\nThe default value is 1.",
                                                 "id": "USB_HOST_EXT_PORT_RESET_ATTEMPTS",
                                                 "name": "USB_HOST_EXT_PORT_RESET_ATTEMPTS",
@@ -17168,6 +17236,16 @@
                         "name": "USB_HOST_ENABLE_ENUM_FILTER_CALLBACK",
                         "range": null,
                         "title": "Enable enumeration filter callback",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "IDF_TARGET_ESP32P4 && SPIRAM && SOC_USB_OTG_SUPPORTED",
+                        "help": "In the ESP32P4, the USB-DWC internal DMA can access external RAM. Enabling this configuration can save\ninternal RAM by allocating the memory buffers used by the USB-DWC peripheral's DMA to external RAM.\nHowever, it introduces minor performance degradation due to the overhead of accessing external RAM.",
+                        "id": "USB_HOST_DWC_DMA_CAP_MEMORY_IN_PSRAM",
+                        "name": "USB_HOST_DWC_DMA_CAP_MEMORY_IN_PSRAM",
+                        "range": null,
+                        "title": "Allocate USB_DWC DMA capable memory in PSRAM",
                         "type": "bool"
                     },
                     {
@@ -18079,7 +18157,7 @@
     {
         "children": [],
         "depends_on": null,
-        "help": "By enabling this option, ESP-IDF experimental feature options will be visible.\n\nNote you should still enable a certain experimental feature option to use it, and you\nshould read the corresponding risk warning and known issue list carefully.\n\nCurrent experimental feature list:\n\n- CONFIG_ESPTOOLPY_FLASHFREQ_120M && CONFIG_ESPTOOLPY_FLASH_SAMPLE_MODE_DTR\n- CONFIG_SPIRAM_SPEED_120M && CONFIG_SPIRAM_MODE_OCT\n- CONFIG_BOOTLOADER_CACHE_32BIT_ADDR_QUAD_FLASH\n- CONFIG_ESP_WIFI_EAP_TLS1_3\n- CONFIG_ESP_WIFI_ENABLE_ROAMING_APP\n- CONFIG_USB_HOST_EXT_PORT_SUPPORT_LS\n- CONFIG_USB_HOST_EXT_PORT_RESET_ATTEMPTS",
+        "help": "By enabling this option, ESP-IDF experimental feature options will be visible.\n\nNote you should still enable a certain experimental feature option to use it, and you\nshould read the corresponding risk warning and known issue list carefully.\n\nCurrent experimental feature list:\n\n- CONFIG_ESPTOOLPY_FLASHFREQ_120M && CONFIG_ESPTOOLPY_FLASH_SAMPLE_MODE_DTR\n- CONFIG_SPIRAM_SPEED_120M && CONFIG_SPIRAM_MODE_OCT\n- CONFIG_BOOTLOADER_CACHE_32BIT_ADDR_QUAD_FLASH\n- CONFIG_ESP_WIFI_EAP_TLS1_3\n- CONFIG_ESP_WIFI_ENABLE_ROAMING_APP\n- CONFIG_USB_HOST_EXT_PORT_RESET_ATTEMPTS",
         "id": "IDF_EXPERIMENTAL_FEATURES",
         "name": "IDF_EXPERIMENTAL_FEATURES",
         "range": null,

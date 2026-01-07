@@ -1,21 +1,12 @@
-/*
-******************************************************************************
-* File Name          : custom_esp_queue.c
-* Description        : ESP32 QUEUE MODULE
-******************************************************************************
-* ESP32에서 QUEUE를 생성하고 관리하기 위한 모듈
-*
-* QueueHandle_adc_p는 ADC 데이터를 저장하는 QUEUE
-*
-******************************************************************************
-
-******************************************************************************
-* first update : 2025/08/21
-******************************************************************************
-* final update : 2025/12/05
-******************************************************************************
-*/
-
+/**
+ * @file        custom_esp_queue.c
+ * @brief       ESP32 QUEUE 모듈
+ * @author      T0T
+ * @date        2026-01-07
+ * @version     1.0.0
+ * 
+ * @details     ESP32에서 Queue를 생성하고 관리하기 위한 모듈
+ */
 #include "custom_esp_queue.h"
 
 // #define QUEUE_DEBUG         DEBUG
@@ -24,13 +15,14 @@
 static const char *custom_esp_queue_TAG = "[@]custom_esp_queue.c";
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════════
- * @section     MUTEX 기반 Thread-Safe 큐 접근 함수 구현
- * ═══════════════════════════════════════════════════════════════════════════════
+ * @function    custom_mpqs_init
+ * @brief       Mutex 보호 큐 초기화
+ * @param[in]   input_p_mpqs      대상 mpqs 포인터
+ * @param[in]   input_i_length    큐 길이
+ * @param[in]   input_i_size      큐 크기
+ * @param[in]   input_p_c_name    큐 이름 문자열
+ * @return      bool        true: 성공, false: 실패
  */
-
-// #define MUTEX_QUEUE_DEBUG         QUEUE_DEBUG
-
 bool custom_mpqs_init(mpqs* input_p_mpqs, int input_i_length, int input_i_size, char* input_p_c_name){
 
     #define CUSTOM_MPQS_INIT_DEBUG         QUEUE_DEBUG
@@ -98,9 +90,11 @@ bool custom_mpqs_init(mpqs* input_p_mpqs, int input_i_length, int input_i_size, 
 }
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════════
- * @section     MUTEX 기반 Thread-Safe 큐 해제 함수 구현
- * ═══════════════════════════════════════════════════════════════════════════════
+ * @function    custom_mpqs_deinit
+ * @brief       Mutex 보호 큐 해제
+ * @param[in]   input_p_mpqs      대상 mpqs 포인터
+ * @param[in]   input_TickType_timeout    타임아웃 (ticks)
+ * @return      bool        true: 성공, false: 실패
  */
 bool custom_mpqs_deinit(mpqs* input_p_mpqs, TickType_t input_TickType_timeout){
 
@@ -236,19 +230,13 @@ bool custom_mpqs_deinit(mpqs* input_p_mpqs, TickType_t input_TickType_timeout){
     }
 }
 
-/**
- * @brief       Custom Safe Queue Send Function
- * @attention   *주의사항 [const : 읽기 전용]
- * @param[in]   mpqs* input_p_mpqs : mpqs 구조체 포인터
- * @param[in]   const void* input_p_v_data : 데이터 포인터
- * @param[in]   TickType_t input_TickType_timeout : 타임아웃
- * @return      cqrre    QUEUE_IS_READY : 준비됨, QUEUE_IS_NOT_READY : 준비되지 않음, QUEUE_IS_EMPTY : 비어있음, QUEUE_IS_ERROR : 오류 
- * @warning     *경고
- * @note        *참고사항
- * 
- * @details     디테일 설명
- * @todo        todo
- * @bug         bug
+ /**
+ * @function    custom_queue_safe_send
+ * @brief       Thread-Safe 큐 송신 (Check + Send 원자적 처리)
+ * @param[in]   input_p_mpqs      대상 mpqs 포인터
+ * @param[in]   input_p_v_data    전송할 데이터 포인터
+ * @param[in]   input_TickType_timeout    타임아웃 (ticks)
+ * @return      cqrre       QUEUE_IS_READY: 성공, 그 외: 실패 사유
  */
 cqrre custom_queue_safe_send(mpqs* input_p_mpqs, const void* input_p_v_data, TickType_t input_TickType_timeout){
     
@@ -329,19 +317,13 @@ cqrre custom_queue_safe_send(mpqs* input_p_mpqs, const void* input_p_v_data, Tic
 }
 
 /**
- * @brief       Custom Safe Queue Receive Function
- * @attention   *주의사항 [const : 읽기 전용]
- * @param[in]   mpqs* input_p_mpqs : mpqs 구조체 포인터
- * @param[in]   void* input_p_v_data : 데이터 포인터
- * @param[in]   TickType_t input_TickType_timeout : 타임아웃
- * @return      cqrre    QUEUE_IS_READY : 준비됨, QUEUE_IS_NOT_READY : 준비되지 않음, QUEUE_IS_EMPTY : 비어있음, QUEUE_IS_ERROR : 오류 
- * @warning     *경고
- * @note        *참고사항
- * 
- * @details     디테일 설명
- * @todo        todo
- * @bug         bug
- */
+ * @function    custom_queue_safe_receive
+ * @brief       Thread-Safe 큐 수신 (Check + Receive 원자적 처리)
+ * @param[in]   input_p_mpqs      대상 mpqs 포인터
+ * @param[in]   input_p_v_data    수신할 데이터 포인터
+ * @param[in]   input_TickType_timeout    타임아웃 (ticks)
+ * @return      cqrre       QUEUE_IS_READY: 성공, 그 외: 실패 사유
+ */ 
 cqrre custom_queue_safe_receive(mpqs* input_p_mpqs, void* input_p_v_data, TickType_t input_TickType_timeout){
 
     #define QUEUE_SAFE_RECEIVE_DEBUG         QUEUE_DEBUG
@@ -430,9 +412,12 @@ cqrre custom_queue_safe_receive(mpqs* input_p_mpqs, void* input_p_v_data, TickTy
     return cqrre_return;
 }
 
-// ═══════════════════════════════════════════
-// 큐 메시지 수 확인
-// ═══════════════════════════════════════════
+/**
+ * @function    custom_queue_safe_messages_waiting
+ * @brief       Thread-Safe 큐 메시지 수 확인
+ * @param[in]   input_p_mpqs      대상 mpqs 포인터
+ * @return      UBaseType_t       큐 메시지 수
+ */
 UBaseType_t custom_queue_safe_messages_waiting(mpqs* input_p_mpqs){
 
     #define CUSTOM_QUEUE_SAFE_MESSAGES_WAITING_DEBUG         QUEUE_DEBUG
@@ -480,9 +465,12 @@ UBaseType_t custom_queue_safe_messages_waiting(mpqs* input_p_mpqs){
     return count;
 }
 
-// ═══════════════════════════════════════════
-// Queue 내용 Reset
-// ═══════════════════════════════════════════
+/**
+ * @function    custom_mpqs_queue_reset
+ * @brief       Thread-Safe 큐 내용 Reset
+ * @param[in]   input_p_mpqs      대상 mpqs 포인터
+ * @return      bool              성공 여부
+ */
 bool custom_mpqs_queue_reset(mpqs* input_p_mpqs){
 
     #define CUSTOM_MPQS_QUEUE_RESET_DEBUG         QUEUE_DEBUG

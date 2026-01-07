@@ -4,7 +4,7 @@
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
-  "idf.portWin": "COM8",
+  "idf.portWin": "COM6",
   "idf.flashType": "UART",
   "idf.customExtraVars": {
     "OPENOCD_SCRIPTS": "C:\\Users\\iSEN_FW_PC1\\.espressif\\tools\\openocd-esp32\\v0.12.0-esp32-20240318/openocd-esp32/share/openocd/scripts",
@@ -20,8 +20,16 @@
     "gpio.h": "c",
     "esp32_s3.h": "c"
   },
-  "idf.espIdfPathWin": "C:\\Users\\FW_1\\esp\\v5.3.3\\esp-idf",
+  "idf.espIdfPathWin": "C:\\Users\\FW_1\\esp\\v5.3.4\\esp-idf",
   "idf.toolsPathWin": "C:\\Users\\FW_1\\.espressif",
   "idf.pythonInstallPath": "C:\\Users\\FW_1\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
-  "editor.formatOnSave": false
+  "editor.formatOnSave": false,
+  "idf.cmakeCompilerArgs": [
+    "-DCMAKE_COLOR_DIAGNOSTICS=ON"
+  ],
+  "terminal.integrated.env.windows": {
+    "FORCE_COLOR": "1",
+    "CLICOLOR_FORCE": "1",
+    "NINJA_STATUS": "[%f/%t] "
+  }
 }
