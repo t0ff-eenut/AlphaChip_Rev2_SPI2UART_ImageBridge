@@ -1,3 +1,20 @@
+/**
+ * @file        project_top.h
+ * @brief       iSENSOR 프로젝트의 전역 설정 헤더 파일
+ * @author      T0T
+ * @date        2026-01-07
+ * @version     1.0.0
+ * 
+ * @details     이 파일은 iSENSOR 프로젝트의 매크로와 전역 설정을 정의함.
+ *              - ANSI 색상 및 텍스트 스타일 매크로
+ *              - Sleep 시간 단위 변환 매크로
+ *              - 부팅 단계 열거형
+ *              - 디버그 설정
+ *              - ADC 설정
+ *              - iSENSOR 관련 설정
+ *              - 전역 변수 및 유틸리티 함수 선언
+ */
+
 #ifndef PROJECT_TOP_H
 #define PROJECT_TOP_H
 
@@ -9,18 +26,18 @@
 #include "esp_timer.h"
 #include "esp_pm.h"
 
-
 /*===========================================================================*/
-/* ANSI 텍스트 스타일 및 색상 매크로                                          */
+/* 메크로 정의
 /*===========================================================================*/
 /**
- * @defgroup    ANSI_STYLES ANSI 텍스트 스타일 메크로 그룹
- * @brief       콘솔 출력용 ANSI 이스케이프 시퀀스 텍스트 스타일
- * @details     
- * @note        
+ * @defgroup    ANSI_COLORS ANSI 텍스트 스타일 메크로 그룹
+ * @brief       텍스트 스타일 설정
+ * @details     텍스트 스타일을 설정하는 ANSI 이스케이프 시퀀스
+                - 굵게
+                - 밑줄
+                - 반전
  * @code
- * // 사용 예제
- * printf(COLOR_WHITE TEXT_BOLD "내용 입력 \n" COLOR_RESET);
+ * printf(TEXT_BOLD COLOR_WHITE "내용 입력 \n" COLOR_RESET);
  * @endcode
  * @{
  */
@@ -49,11 +66,18 @@
 
 /**
  * @defgroup    ANSI_COLORS ANSI 텍스트 색상 메크로 그룹
- * @brief       콘솔 출력용 ANSI 이스케이프 시퀀스 색상 코드
- * @details     
- * @note        
+ * @brief       텍스트 색상 설정
+ * @details     텍스트 색상을 설정하는 ANSI 이스케이프 시퀀스
+                - 검은색
+                - 빨간색
+                - 초록색
+                - 노란색
+                - 파란색
+                - 보라색
+                - 청록색
+                - 흰색
  * @code
- * // 사용 예제
+ * printf(TEXT_BOLD COLOR_WHITE "내용 입력 \n" COLOR_RESET);
  * @endcode
  * @{
  */
@@ -125,9 +149,6 @@
 //     #define MIN(a,b)    (( (a) < (b) ) ? (a) : (b))
 // #endif
 
-/*===========================================================================*/
-/* Sleep 시간 단위 변환 매크로                                               */
-/*===========================================================================*/
 /**
  * @defgroup    SLEEP_MACROS Sleep 시간 단위 매크로 그룹
  * @brief       Sleep 시간을 다양한 단위로 표현하기 위한 매크로
@@ -193,15 +214,14 @@
 /** @} */ // end of SLEEP_MACROS
 
 /*===========================================================================*/
-/* 열거형 및 타입 정의                                                        */
+/* 열거형 정의
 /*===========================================================================*/
 /**
- * @enum        device_booting_level_enum
+ * @enum        dble
+ * @typedef     device_booting_level_enum
  * @brief       ESP32 부팅 단계 열거형
- * @typedef     dble
  * @details     ESP32 부팅 시 진행되는 각 단계를 정의한 열거형입니다.
  *              부팅 프로세스의 흐름을 제어하고 추적하는 데 사용됩니다.
- * @see         (Use) main.c
  */
 typedef enum device_booting_level_enum{
     BOOTING_LEVEL_INITIAL,              /* 0: 초기 설정 단계 - 하드웨어 및 시스템 초기화 */
@@ -211,48 +231,18 @@ typedef enum device_booting_level_enum{
 }dble;
 
 /*===========================================================================*/
-/* 전역 변수 선언                                                             */
+/* 변수 정의
 /*===========================================================================*/
-/**
- * @brief       ESP32 웨이크업 원인 저장 전역 변수
- * @note        가능한 웨이크업 원인 값:
- *              | 값 | 설명 |
- *              |----|----|
- *              | ESP_SLEEP_WAKEUP_UNDEFINED | 정의되지 않은 원인 (첫 부팅 또는 리셋) |
- *              | ESP_SLEEP_WAKEUP_EXT0 | EXT0 웨이크업 (단일 RTC GPIO) |
- *              | ESP_SLEEP_WAKEUP_EXT1 | EXT1 웨이크업 (다중 RTC GPIO) |
- *              | ESP_SLEEP_WAKEUP_TIMER | 타이머 웨이크업 |
- *              | ESP_SLEEP_WAKEUP_TOUCHPAD | 터치패드 웨이크업 |
- *              | ESP_SLEEP_WAKEUP_ULP | ULP 코프로세서 웨이크업 |
- *              | ESP_SLEEP_WAKEUP_GPIO | GPIO 웨이크업 (라이트 슬립 전용) |
- *              | ESP_SLEEP_WAKEUP_UART | UART 웨이크업 (라이트 슬립 전용) |
- * @details     ESP32가 Deep Sleep에서 깨어난 원인을 저장하는 전역 변수.
- *              esp_sleep_get_wakeup_cause() 함수로 값을 가져와 저장함.
- * @see         (Use) main.c
- */
 extern esp_sleep_wakeup_cause_t g_esp_sleep_wakeup_cause;
-
-/**
- * @brief       ESP-IDF API 에러 코드 저장 전역 변수
- * @details     ESP-IDF 함수 호출 결과를 저장하는 전역 변수
- *              에러 처리 및 디버깅 목적으로 사용됨
- * @note        - ESP_OK(0)이면 성공, 그 외의 값은 에러 코드
- *              - esp_err_to_name() 함수로 에러 이름 문자열 확인 가능
- * @todo        각 파일별로 변수 선언으로 변경하기
- */
 extern esp_err_t g_esp_err;
 
 /*===========================================================================*/
-/* 유틸리티 함수 선언                                                         */
+/* 함수 정의
 /*===========================================================================*/
 /**
  * @defgroup    UTILITY_FUNCTIONS 유틸리티 함수 그룹
  * @brief       프로젝트 전체에서 사용되는 공통 유틸리티 함수들
  * @details     
- * @note        
- * @code
- * // 사용 예제
- * @endcode
  * @{
  */
     /**
@@ -410,144 +400,140 @@ extern esp_err_t g_esp_err;
     int custom_ms_to_delay(int input_i_ms);
 /** @} */ // end of UTILITY_FUNCTIONS
 
+
 /*===========================================================================*/
-/* 디버그 메세지 관련 설정                                                   */
+/* 환경 변수 그룹                                                            */
 /*===========================================================================*/
 /**
- * @defgroup    DEBUG_SETTINGS 디버그 메세지 관련 설정 메크로 그룹
- * @brief       프로젝트 전체에서 사용되는 디버그 메세지 출력 관련 설정값
+ * @defgroup    ENVIRONMENT_VARIABLES 환경 변수 그룹
+ * @brief       프로젝트 전체에서 사용되는 환경 변수들
  * @details     
- * @note        
- * @code
- * // 사용 예제
- * @endcode
  * @{
  */
+    /*===========================================================================*/
+    /* 디버그 메세지 관련 설정                                                   */
+    /*===========================================================================*/
     /**
-    * @def         DEBUG
-    * @brief       디버그 메세지 출력 활성화
-    * @details     true로 설정 시 디버그 메시지 출력 활성화
+    * @defgroup    DEBUG_SETTINGS 디버그 메세지 관련 설정 메크로 그룹
+    * @brief       프로젝트 전체에서 사용되는 디버그 메세지 출력 관련 설정값
+    * @details     
+    * @{
     */
-    #define DEBUG       true
+        /**
+        * @def         DEBUG
+        * @brief       디버그 메세지 출력 활성화
+        * @details     true로 설정 시 디버그 메시지 출력 활성화
+        */
+        #define DEBUG       true
 
+        /**
+        * @def         PRINT_DELAY
+        * @brief       디버그 메세지 출력 시 딜레이 활성화
+        * @details     true로 설정 시 디버그 메시지 출력 시 딜레이
+        */
+        #if DEBUG
+            #define PRINT_DELAY false
+        #else
+            #define PRINT_DELAY false
+        #endif
+
+        /**
+        * @def         DEBUG_DELAY_TIME_MS
+        * @brief       디버그 모드에서의 딜레이 시간 (밀리초)
+        * @details     디버그 메시지 출력 간격 조절용 딜레이 시간
+        */
+        #if (DEBUG && PRINT_DELAY)
+            #define DEBUG_DELAY_TIME_MS         100
+        #endif
+    /** @} */ // end of DEBUG_SETTINGS
+
+    /*===========================================================================*/
+    /* Thread 이벤트 비트 정의                                                      */
+    /*===========================================================================*/
     /**
-    * @def         PRINT_DELAY
-    * @brief       디버그 메세지 출력 시 딜레이 활성화
-    * @details     true로 설정 시 디버그 메시지 출력 시 딜레이
+    * @defgroup    Thread 이벤트 비트 정의 메크로 그룹
+    * @brief       프로젝트 전체에서 사용되는 Thread 이벤트 비트 정의
+    * @details     
+    * @{
     */
-    #if DEBUG
-        #define PRINT_DELAY false
-    #else
-        #define PRINT_DELAY false
-    #endif
+        /**
+        * @def         NOTIFY_SHUTDOWN_BIT
+        * @brief       Thread 종료 알림 비트
+        * @details     이벤트 그룹에서 0번 비트를 종료 신호로 사용
+        *              이 비트가 설정되면 Thread 종료 프로세스 시작
+        */
+        #define NOTIFY_SHUTDOWN_BIT         (1 << 0)
 
+        /**
+        * @def         NOTIFY_BUFFER_RESET_BIT
+        * @brief       버퍼 리셋 알림 비트
+        * @details     이벤트 그룹에서 8번 비트를 버퍼 리셋 신호로 사용
+        *              이 비트가 설정되면 버퍼 초기화 수행
+        */
+        #define NOTIFY_BUFFER_RESET_BIT     (1 << 8)
+        // #define NOTIFY_ADC_BREAK_BIT        (1 << 16) // 16번 비트를 ADC Break 신호로 사용
+    /** @} */ // end of EVENT_GROUP_BITS
+
+    /*===========================================================================*/
+    /* custom_esp_gpio.h 설정 값                                                 */
+    /*===========================================================================*/
     /**
-    * @def         DEBUG_DELAY_TIME_MS
-    * @brief       디버그 모드에서의 딜레이 시간 (밀리초)
-    * @details     디버그 메시지 출력 간격 조절용 딜레이 시간
+    * @defgroup    GPIO_SETTINGS GPIO 설정 값 메크로 그룹
+    * @brief       custom_esp_gpio.h 의 설정 값 정의
+    * @details     
+    * @{
     */
-    #if (DEBUG && PRINT_DELAY)
-        #define DEBUG_DELAY_TIME_MS         100
-    #endif
-/** @} */ // end of DEBUG_SETTINGS
+        /**
+        * @def         LED_STRIP_ENABLE
+        * @brief       LED 스트립 기능 활성화
+        * @details     ESP32C3 보드 타입에 따라 조건부로 설정됨
+        *              - ESP32C3_SUPER_MINI: false (비활성화)
+        *              - 기타 ESP32 보드: true (활성화)
+        * @note        (참고) ESP32C3_SUPER_MINI의 경우 자동으로 False 설정됨
+        * @see         (Use) custom_esp_gpio.h
+        */
+        #if (CONFIG_IDF_TARGET_ESP32C3 && (ESP32C3 == ESP32C3_SUPER_MINI))
+            #define LED_STRIP_ENABLE    false
+        #else
+            #define LED_STRIP_ENABLE    true
+        #endif
 
-/*===========================================================================*/
-/* Thread 이벤트 비트 정의                                                      */
-/*===========================================================================*/
-/**
- * @defgroup    Thread 이벤트 비트 정의 메크로 그룹
- * @brief       프로젝트 전체에서 사용되는 Thread 이벤트 비트 정의
- * @details     
- * @note        
- * @code
- * // 사용 예제
- * @endcode
- * @{
- */
+    /** @} */ // end of GPIO_SETTINGS
+
+    /*===========================================================================*/
+    /* custom_esp_queue.h 설정 값                                                 */
+    /*===========================================================================*/
     /**
-    * @def         NOTIFY_SHUTDOWN_BIT
-    * @brief       Thread 종료 알림 비트
-    * @details     이벤트 그룹에서 0번 비트를 종료 신호로 사용
-    *              이 비트가 설정되면 Thread 종료 프로세스 시작
+    * @defgroup    QUEUE_SETTINGS 큐 설정 값 메크로 그룹
+    * @brief       custom_esp_queue.h 의 설정 값 정의
+    * @details     
+    * @{
     */
-    #define NOTIFY_SHUTDOWN_BIT         (1 << 0)
+        /**
+        * @def         MUTEX_TIMEOUT_MS
+        * @brief       뮤텍스 타임아웃 시간 (밀리초)
+        * @details     FreeRTOS 뮤텍스 획득 시도할 때, 최대 대기 시간
+        * @see         (Use) custom_esp_queue.h
+        */
+        #define MUTEX_TIMEOUT_MS        10
+    /** @} */ // end of QUEUE_SETTINGS
 
+    /*===========================================================================*/
+    /* custom_esp_uart_thread.h 설정 값                                          */
+    /*===========================================================================*/
     /**
-    * @def         NOTIFY_BUFFER_RESET_BIT
-    * @brief       버퍼 리셋 알림 비트
-    * @details     이벤트 그룹에서 8번 비트를 버퍼 리셋 신호로 사용
-    *              이 비트가 설정되면 버퍼 초기화 수행
+    * @defgroup    UART_SETTINGS UART 설정 값 메크로 그룹
+    * @brief       custom_esp_uart_thread.h 의 설정 값 정의
+    * @details     
+    * @{
     */
-    #define NOTIFY_BUFFER_RESET_BIT     (1 << 8)
-    // #define NOTIFY_ADC_BREAK_BIT        (1 << 16) // 16번 비트를 ADC Break 신호로 사용
-/** @} */ // end of EVENT_GROUP_BITS
-
-/*===========================================================================*/
-/* custom_esp_gpio.h 설정 값                                                 */
-/*===========================================================================*/
-/**
- * @defgroup    GPIO_SETTINGS GPIO 설정 값 메크로 그룹
- * @brief       custom_esp_gpio.h 의 설정 값 정의
- * @details     
- * @note        
- * @code
- * // 사용 예제
- * @endcode
- * @{
- */
-    /**
-    * @def         LED_STRIP_ENABLE
-    * @brief       LED 스트립 기능 활성화
-    * @details     ESP32C3 보드 타입에 따라 조건부로 설정됨
-    *              - ESP32C3_SUPER_MINI: false (비활성화)
-    *              - 기타 ESP32 보드: true (활성화)
-    * @note        (참고) ESP32C3_SUPER_MINI의 경우 자동으로 False 설정됨
-    * @see         (Use) custom_esp_gpio.h
-    */
-    #if (CONFIG_IDF_TARGET_ESP32C3 && (ESP32C3 == ESP32C3_SUPER_MINI))
-        #define LED_STRIP_ENABLE    false
-    #else
-        #define LED_STRIP_ENABLE    true
-    #endif
-
-/** @} */ // end of GPIO_SETTINGS
-
-/*===========================================================================*/
-/* custom_esp_queue.h 설정 값                                                 */
-/*===========================================================================*/
-/**
- * @defgroup    QUEUE_SETTINGS 큐 설정 값 메크로 그룹
- * @brief       custom_esp_queue.h 의 설정 값 정의
- * @details     
- * @note        
- * @code
- * // 사용 예제
- * @endcode
- * @{
- */
-/**
- * @def         MUTEX_TIMEOUT_MS
- * @brief       뮤텍스 타임아웃 시간 (밀리초)
- * @details     FreeRTOS 뮤텍스 획득 시도할 때, 최대 대기 시간
- * @see         (Use) custom_esp_queue.h
- */
-    #define MUTEX_TIMEOUT_MS        10
-/** @} */ // end of QUEUE_SETTINGS
-
-/*===========================================================================*/
-/* custom_esp_uart_thread.h 설정 값                                          */
-/*===========================================================================*/
-/**
- * @defgroup    UART_SETTINGS UART 설정 값 메크로 그룹
- * @brief       custom_esp_uart_thread.h 의 설정 값 정의
- * @details     
- * @note        
- * @code
- * // 사용 예제
- * @endcode
- * @{
- */
-    #define UART_BUFFER_SIZE                            256             // UART 버퍼 크기 (ESP-IDF 최소 요구: > 128)
-/** @} */ // end of UART_SETTINGS
+        /**
+        * @def         UART_BUFFER_SIZE
+        * @brief       UART 버퍼 크기
+        * @details     UART 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+        */
+        #define UART_BUFFER_SIZE                            256             // UART 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+    /** @} */ // end of UART_SETTINGS
+/** @} */ // end of ENVIRONMENT_VARIABLES
 
 #endif // PROJECT_TOP_H

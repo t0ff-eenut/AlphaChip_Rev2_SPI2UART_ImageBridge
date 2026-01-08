@@ -9,24 +9,56 @@
  *              - 펌웨어의 동작 모드(MODE) 및 디버그 Print 옵션을 설정하는 매크로와 핵심 상수들을 포함
  *              - FreeRTOS Task 간의 종료 및 동기화를 위한 전역 플래그 변수를 정의
  *              - 로그 출력용 시간 문자열 생성, 부팅 원인 출력 등 디버깅에 유용한 헬퍼 함수들을 구현
- *              - custom_getRuntimeString() - 부팅 이후 경과 시간을 문자열로 반환
- *              - custom_wakeup_cause_print() - 부팅 원인을 문자열로 반환
- *              - custom_ui8_abs() - uint8_t 타입의 절대값 반환
- *              - custom_ui16_abs() - uint16_t 타입의 절대값 반환
- *              - custom_ui64_abs() - uint64_t 타입의 절대값 반환
- *              - custom_f_abs() - float 타입의 절대값 반환
- *              - custom_tick_to_delay() - tick을 delay로 변환
- *              - custom_ms_to_delay() - ms를 delay로 변환
  */
 #include "project_top.h"
 
+/**
+ * @brief       project_top.c 파일 디버깅 여부
+ * @details     project_top.c 파일에서 디버깅 Print 사용 여부를 정의합니다
+ */
 #define PROJECT_TOP_DEBUG         DEBUG
+
+/**
+ * @brief       project_top.c 디버깅 Tag
+ * @details     Debug Print 시 project_top.c 파일을 구분하기 위한 Tag
+ */
 static const char *project_top_TAG  = "[@]project_top.c";
 
+/*===========================================================================*/
+/* 변수 정의
+/*===========================================================================*/
+/**
+ * @brief       ESP32 웨이크업 원인 저장 전역 변수
+ * @note        가능한 웨이크업 원인 값:
+ *              | 값 | 설명 |
+ *              |----|----|
+ *              | ESP_SLEEP_WAKEUP_UNDEFINED | 정의되지 않은 원인 (첫 부팅 또는 리셋) |
+ *              | ESP_SLEEP_WAKEUP_EXT0 | EXT0 웨이크업 (단일 RTC GPIO) |
+ *              | ESP_SLEEP_WAKEUP_EXT1 | EXT1 웨이크업 (다중 RTC GPIO) |
+ *              | ESP_SLEEP_WAKEUP_TIMER | 타이머 웨이크업 |
+ *              | ESP_SLEEP_WAKEUP_TOUCHPAD | 터치패드 웨이크업 |
+ *              | ESP_SLEEP_WAKEUP_ULP | ULP 코프로세서 웨이크업 |
+ *              | ESP_SLEEP_WAKEUP_GPIO | GPIO 웨이크업 (라이트 슬립 전용) |
+ *              | ESP_SLEEP_WAKEUP_UART | UART 웨이크업 (라이트 슬립 전용) |
+ * @details     ESP32가 Deep Sleep에서 깨어난 원인을 저장하는 전역 변수.
+ *              esp_sleep_get_wakeup_cause() 함수로 값을 가져와 저장함.
+ */
 esp_sleep_wakeup_cause_t g_esp_sleep_wakeup_cause;
+
+/**
+ * @brief       ESP-IDF API 에러 코드 저장 전역 변수
+ * @details     ESP-IDF 함수 호출 결과를 저장하는 전역 변수
+ *              에러 처리 및 디버깅 목적으로 사용됨
+ * @note        - ESP_OK(0)이면 성공, 그 외의 값은 에러 코드
+ *              - esp_err_to_name() 함수로 에러 이름 문자열 확인 가능
+ * @todo        각 파일별로 변수 선언으로 변경하기
+ */
 esp_err_t g_esp_err;
 // bool b_deep_sleep_ready  = false;
 
+/*===========================================================================*/
+/* 함수 정의
+/*===========================================================================*/
 const char* custom_getRuntimeString(void){
     static char buffer[32];
     uint64_t us = esp_timer_get_time(); // 부팅 이후 경과 시간 (마이크로초)

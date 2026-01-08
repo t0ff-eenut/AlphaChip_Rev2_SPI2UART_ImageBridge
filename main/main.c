@@ -9,23 +9,28 @@
  */
 
 #include "hw_level_handle.h"         // HAL Level 통합 헤더 사용
-// #include "application_handle.h"
 
 /**
- * @def         MAIN_DEBUG
  * @brief       메인 함수 디버깅 여부
  * @details     메인 함수에서 디버깅을 위한 디버깅 여부를 정의합니다
  */
 #define MAIN_DEBUG         DEBUG
 // #define MAIN_DEBUG         false
+
+/**
+ * @brief       Debug Print Tag
+ * @details     Debug Print 시 main.c 파일을 구분하기 위한 Tag
+ */
 static const char *main_TAG = "[@]main.c";
 
- /**
+/*===========================================================================*/
+/* 열거형 정의
+/*===========================================================================*/
+/**
  * @enum        ile
  * @typedef     initial_list_enum
- * @brief       모듈 초기화 순서 정의
- * @details     부팅 시작 시 GPIO -> SPI -> UART 순서로 초기화 진행
- * @note        Doxygen에 반영 안됨
+ * @brief       초기화 리스트 열거형
+ * @details     초기화 순서에 따라 모듈의 초기화 상태를 저장하는 배열
  */
 typedef enum initial_list_enum{
     INIT_LIST_GPIO,     /**< 0 : GPIO 초기화 */
@@ -33,9 +38,36 @@ typedef enum initial_list_enum{
     INIT_LIST_UART,     /**< 2 : UART 초기화 */
     INIT_LIST_END,      /**< 3 : 초기화 종료 */
 }ile;
+
+/*===========================================================================*/
+/* 변수 정의
+/*===========================================================================*/
+/**
+ * @brief       모듈 초기화 상태 저장 배열
+ * @details     초기화 순서에 따라 모듈의 초기화 상태를 저장하는 배열
+ */
 static bool b_A_init_states[INIT_LIST_END] = {false,};
 
+/*===========================================================================*/
+/* 함수 정의
+/*===========================================================================*/
+/**
+ * @brief       initial() Function
+ * @attention   static[내부 전용]
+ * @param[in]   void
+ * @return      bool    true : 초기화 성공, false : 초기화 실패
+ * @details     필요한 모듈 초기화 함수
+ *              - (동작 순서)
+ */
 static bool initial(void);
+
+/**
+ * @brief       deinitial() Function
+ * @attention   static[내부 전용]
+ * @param[in]   void
+ * @return      bool    true : 초기화 성공, false : 초기화 실패
+ * @details     초기화한 모듈 해제 함수
+ */
 static bool deinitial(void);
 
 /**

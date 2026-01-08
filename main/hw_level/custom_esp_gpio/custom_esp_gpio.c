@@ -15,18 +15,39 @@
 
 #include "custom_esp_gpio.h"
 
+/**
+ * @brief       custom_esp_gpio.c 파일 디버깅 여부
+ * @details     custom_esp_gpio.c 파일에서 디버깅 Print 사용 여부를 정의합니다
+ */
 #define GPIO_DEBUG  DEBUG
 // #define GPIO_DEBUG  false
 
+/**
+ * @brief       custom_esp_gpio.c 디버깅 Tag
+ * @details     Debug Print 시 custom_esp_gpio.c 파일을 구분하기 위한 Tag
+ */
 static const char *custom_esp_gpio_TAG = "[@]custom_esp_gpio.c";
 
-// GPIO Setting 여부
+/*===========================================================================*/
+/* 변수 정의
+/*===========================================================================*/
+/**
+ * @brief       GPIO Pin 초기화 상태 저장 배열
+ * @details     GPIO Pin 초기화 여부를 저장하는 배열
+ */
 static bool b_A_gpio_states[40] = {false,};
 
 #if LED_STRIP_ENABLE
+    /**
+    * @brief       LED Strip 핸들
+    * @details     LED Strip를 제어하기 위한 핸들 변수
+    */
     static led_strip_handle_t led_strip_handle;
 #endif
 
+/*===========================================================================*/
+/* 함수 정의
+/*===========================================================================*/
 bool custom_gpio_init(void){
     #define CUSTOM_GPIO_INIT_DEBUG         GPIO_DEBUG
 

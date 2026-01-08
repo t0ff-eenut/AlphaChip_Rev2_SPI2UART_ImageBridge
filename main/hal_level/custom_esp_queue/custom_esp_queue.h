@@ -2,7 +2,7 @@
  * @file        custom_esp_queue.h
  * @brief       ESP32의 Queue 모듈 헤더 파일
  * @author      T0T
- * @date        2025-12-04
+ * @date        2026-01-07
  * @version     1.0.0
  * 
  * @details     이 파일은 ESP32의 Queue 모듈을 구현한 헤더 파일임.
@@ -17,36 +17,55 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 
-#define QUEUE_THREAD_STACK_SIZE (1024 * 4)
+/*===========================================================================*/
+/* 메크로 정의
+/*===========================================================================*/
+#ifndef QUEUE_THREAD_STACK_SIZE
+    /**
+    * @brief       Queue Thread 스택 크기
+    * @details     Queue Thread 스택 크기를 정의합니다
+    * @warning     사이즈 변경하지 말 것
+    * @todo        project_top 에 구현
+    */
+    #define QUEUE_THREAD_STACK_SIZE (1024 * 4)
+#endif
 
- /**
+/*===========================================================================*/
+/* 열거형 정의
+/*===========================================================================*/
+/**
  * @enum        qiote
  * @typedef     queue_input_output_toggle_enum
  * @brief       Queue 입력/출력 토글
- * @note        Doxygen에 반영 안됨
+ * @details     Queue 입력/출력 토글 enum
+ * @todo        내용 수정
  */
 typedef enum queue_input_output_toggle_enum{
-    QUEUE_INPUT,
-    QUEUE_OUTPUT
+    QUEUE_INPUT,    /**< 0 : 입력 */
+    QUEUE_OUTPUT    /**< 1 : 출력 */
 } qiote;
 
  /**
  * @enum        cqrre
  * @typedef     check_queue_ready_return_enum
  * @brief       Queue 상태 확인 반환 enum
- * @note        Doxygen에 반영 안됨
+ * @details     
+ * @todo        내용 수정
  */
 typedef enum check_queue_ready_return_enum{
-    QUEUE_IS_READY,
-    MPQS_IS_NOT_READY,
-    QUEUE_IS_NOT_READY,
-    MUTEX_IS_NOT_READY,
-    MUTEX_IS_BUSY,
-    QUEUE_IS_EMPTY,
-    QUEUE_IS_FULL,
-    QUEUE_IS_ERROR
+    QUEUE_IS_READY,         /**< 0 : 정상 */
+    MPQS_IS_NOT_READY,      /**< 1 : MPQS 준비 안됨*/
+    QUEUE_IS_NOT_READY,     /**< 2 : 큐 준비 안됨*/
+    MUTEX_IS_NOT_READY,     /**< 3 : MUTEX 준비 안됨*/
+    MUTEX_IS_BUSY,          /**< 4 : MUTEX 사용 중*/
+    QUEUE_IS_EMPTY,         /**< 5 : 큐가 비어있음*/
+    QUEUE_IS_FULL,          /**< 6 : 큐가 가득 차 있음*/
+    QUEUE_IS_ERROR          /**< 7 : 큐 오류*/
 } cqrre;
 
+/*===========================================================================*/
+/* 구조체 정의
+/*===========================================================================*/
 /**
  * @struct      mpqs
  * @typedef     mutex_protected_queue_struct
@@ -59,8 +78,11 @@ typedef struct mutex_protected_queue_struct {
     char*               p_c_name;               /**< 큐 이름 (디버깅용) */
 } mpqs;
 
+/*===========================================================================*/
+/* 함수 정의
+/*===========================================================================*/
 /**
- * @function    custom_nvs_handle_to_string
+ * @function    custom_mpqs_init
  * @brief       Mutex 보호 큐 초기화
  * @param[in]   input_p_mpqs      대상 mpqs 포인터
  * @param[in]   input_i_length    큐 길이

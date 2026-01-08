@@ -1,33 +1,124 @@
 #ifndef CUSTOM_ESP_SPI_THREAD_H
 #define CUSTOM_ESP_SPI_THREAD_H
 
-#include "hal_level_top.h"
+// ADC는 Queue 모듈에 의존 (같은 계층 내 직접 참조)
+#include "custom_esp_queue.h"
+#include "driver/spi_slave.h"
+/**
+* @defgroup    SPI_IMAGE_CONFIG 이미지 출력용 SPI 설정 그룹
+* @brief       이미지 출력용 SPI 설정
+* @details     
+* @note        
+* @{
+*/
+    /**
+    * @def         SPI_IMAGE_RCV_HOST
+    * @brief       SPI Image 수신 Host
+    * @details     SPI Image 수신 Host를 정의합니다
+    */
+    #define SPI_IMAGE_RCV_HOST              SPI2_HOST
+    /**
+    * @def         SPI_IMAGE_GPIO_SCLK
+    * @brief       SPI Image Clock GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 Clock GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_SCLK             GPIO_NUM_12
+    /**
+    * @def         SPI_IMAGE_GPIO_MOSI
+    * @brief       SPI Image MOSI GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 MOSI GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_MOSI             GPIO_NUM_11
+    /**
+    * @def         SPI_IMAGE_GPIO_MISO
+    * @brief       SPI Image MISO GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 MISO GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_MISO             GPIO_NUM_13
+    /**
+    * @def         SPI_IMAGE_GPIO_CS
+    * @brief       SPI Image Chip Select GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 Chip Select GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_CS               GPIO_NUM_10
+    /**
+    * @def         SPI_IMAGE_SPI_BUSTER_SIZE
+    * @brief       SPI Image 버스 크기
+    * @details     SPI Image 수신 Host의 버스 크기를 정의합니다.
+    * @note        Max 320 bit
+    */
+    #define SPI_IMAGE_SPI_BUSTER_SIZE       (64 * 5)    // bit
+/** @} */ // end of SPI_IMAGE_CONFIG
 
-// // ADC는 Queue 모듈에 의존 (같은 계층 내 직접 참조)
-// #include "custom_esp_queue.h"
-// #include "driver/spi_slave.h"
+/**
+* @defgroup    SPI_CONFIG SPI 설정 그룹
+* @brief       SPI 설정
+* @details     
+* @note        
+* @{
+*/
+    /**
+    * @def         SPI_CMD_RCV_HOST
+    * @brief       SPI 명령어 전송 Host
+    * @details     SPI 명령어 전송 Host를 정의합니다
+    */
+    #define SPI_CMD_RCV_HOST                SPI3_HOST
+    /**
+    * @def         SPI_CMD_GPIO_SCLK
+    * @brief       SPI 명령어 Clock GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 Clock GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_SCLK               GPIO_NUM_36
+    /**
+    * @def         SPI_CMD_GPIO_MOSI
+    * @brief       SPI 명령어 MOSI GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 MOSI GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_MOSI               GPIO_NUM_35
+    /**
+    * @def         SPI_CMD_GPIO_MISO
+    * @brief       SPI 명령어 MISO GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 MISO GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_MISO               GPIO_NUM_37
+    /**
+    * @def         SPI_CMD_GPIO_CS
+    * @brief       SPI 명령어 Chip Select GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 Chip Select GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_CS                 GPIO_NUM_39
+    /**
+    * @def         SPI_CMD_SPI_BUSTER_SIZE
+    * @brief       SPI 명령어 버스 크기
+    * @details     SPI 명령어 전송 Host의 버스 크기를 정의합니다
+    */
+    #define SPI_CMD_SPI_BUSTER_SIZE         8           // bit
+/** @} */ // end of SPI_CONFIG
 
-// #define SPI_IMAGE_RCV_HOST              SPI2_HOST
-// #define SPI_CMD_RCV_HOST                SPI3_HOST
+/**
+* @defgroup    SPI_COMMEND_CONFIG SPI 커멘드 설정 그룹
+* @brief       SPI 커멘드 설정
+* @details     
+* @note        
+* @{
+*/
+    /**
+    * @def         SPI_FIRST_WORD
+    * @brief       SPI 명령어 버스의 첫 번째 단어
+    * @details     SPI 명령어 버스의 첫 번째 단어를 정의합니다
+    * @note        0xA5 = 0b 1010_0101
+    #define SPI_FIRST_WORD                  0XA5
+    // /**
+    //  * @def         SPI_WRONG_WORD
+    //  * @brief       SPI 명령어 버스의 잘못된 단어
+    //  * @details     SPI 명령어 버스의 잘못된 단어를 정의합니다
+    //  */
+    // #define SPI_WRONG_WORD                  0X88
+/** @} */ // end of SPI_COMMEND_CONFIG
 
-// #define SPI_IMAGE_GPIO_SCLK             GPIO_NUM_12
-// #define SPI_IMAGE_GPIO_MOSI             GPIO_NUM_11
-// #define SPI_IMAGE_GPIO_MISO             GPIO_NUM_13
-// #define SPI_IMAGE_GPIO_CS               GPIO_NUM_10
-// #define SPI_IMAGE_SPI_BUSTER_SIZE       (64 * 5)    // bit
-
-// #define SPI_CMD_GPIO_SCLK               GPIO_NUM_36
-// #define SPI_CMD_GPIO_MOSI               GPIO_NUM_35
-// #define SPI_CMD_GPIO_MISO               GPIO_NUM_37
-// #define SPI_CMD_GPIO_CS                 GPIO_NUM_39
-// #define SPI_CMD_SPI_BUSTER_SIZE         8           // bit
-
-// #define SPI_FIRST_WORD                  0XA5
-// #define SPI_WRONG_WORD                  0X88
-
-// #define SPI_IMAGE_RX_STACK_SIZE                     (1024 * 8)
-// #define SPI_IMAGE_RECIVE_DATA_PROCESS_STACK_SIZE    (1024 * 8)
-// #define SPI_CMD_TX_STACK_SIZE                       (1024 * 3)
+#define SPI_IMAGE_RX_STACK_SIZE                     (1024 * 8)
+#define SPI_IMAGE_RECIVE_DATA_PROCESS_STACK_SIZE    (1024 * 8)
+#define SPI_CMD_TX_STACK_SIZE                       (1024 * 3)
 
 // /**
 //  * @enum        spi_send_state_enum(ssse)
