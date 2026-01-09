@@ -100,10 +100,203 @@ bool custom_gpio_init(void){
     //////////////////////////////////////
     /// SPI GPIO Pre-Init (노이즈 방지) ///
     //////////////////////////////////////
+    // SPI 드라이버 초기화 전 SPI_IMAGE_GPIO_MOSI 핀에 풀업 설정하여 플로팅으로 인한 쓰레기값 유입 방지
+    #if CUSTOM_GPIO_INIT_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_MOSI 핀 노이즈 방지를 위한 SPI_IMAGE_GPIO_MOSI[%d] 풀업 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_MOSI[%d] GPIO_MODE_INPUT 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_MOSI[%d] GPIO_PULLUP_ENABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_MOSI[%d] GPIO_PULLDOWN_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_MOSI[%d] GPIO_INTR_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_MOSI);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    static const gpio_config_t spi_image_mosi_io_conf = {
+        .pin_bit_mask   = (1ULL << SPI_IMAGE_GPIO_MOSI),
+        .mode           = GPIO_MODE_INPUT,
+        .pull_up_en     = GPIO_PULLUP_ENABLE,       // 풀업 활성화로 노이즈 방지
+        .pull_down_en   = GPIO_PULLDOWN_DISABLE,
+        .intr_type      = GPIO_INTR_DISABLE
+    };
+    if(gpio_config(&spi_image_mosi_io_conf) != ESP_OK){
+        #if CUSTOM_GPIO_INIT_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_MOSI[%d] gpio_config() 초기화 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_MOSI);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_gpio_states[SPI_IMAGE_GPIO_MOSI] = true;
 
+    // SPI 드라이버 초기화 전 SPI_IMAGE_GPIO_SCLK 핀에 풀업 설정하여 플로팅으로 인한 쓰레기값 유입 방지
+    #if CUSTOM_GPIO_INIT_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_SCLK 핀 노이즈 방지를 위한 SPI_IMAGE_GPIO_SCLK[%d] 풀업 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_SCLK[%d] GPIO_MODE_INPUT 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_SCLK[%d] GPIO_PULLUP_ENABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_SCLK[%d] GPIO_PULLDOWN_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_SCLK[%d] GPIO_INTR_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_SCLK);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    static const gpio_config_t spi_image_sclk_io_conf = {
+        .pin_bit_mask   = (1ULL << SPI_IMAGE_GPIO_SCLK),
+        .mode           = GPIO_MODE_INPUT,
+        .pull_up_en     = GPIO_PULLUP_ENABLE,       // 풀업 활성화로 노이즈 방지
+        .pull_down_en   = GPIO_PULLDOWN_DISABLE,
+        .intr_type      = GPIO_INTR_DISABLE
+    };
+    if(gpio_config(&spi_image_sclk_io_conf) != ESP_OK){
+        #if CUSTOM_GPIO_INIT_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_SCLK[%d] gpio_config() 초기화 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_SCLK);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_gpio_states[SPI_IMAGE_GPIO_SCLK] = true;
 
+    // SPI 드라이버 초기화 전 SPI_IMAGE_GPIO_CS 핀에 풀업 설정하여 플로팅으로 인한 쓰레기값 유입 방지
+    #if CUSTOM_GPIO_INIT_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_CS 핀 노이즈 방지를 위한 SPI_IMAGE_GPIO_CS[%d] 풀업 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_CS[%d] GPIO_MODE_INPUT 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_CS[%d] GPIO_PULLUP_ENABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_CS[%d] GPIO_PULLDOWN_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_CS[%d] GPIO_INTR_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_CS);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    static const gpio_config_t spi_image_cs_io_conf = {
+        .pin_bit_mask   = (1ULL << SPI_IMAGE_GPIO_CS),
+        .mode           = GPIO_MODE_INPUT,
+        .pull_up_en     = GPIO_PULLUP_ENABLE,       // 풀업 활성화로 노이즈 방지
+        .pull_down_en   = GPIO_PULLDOWN_DISABLE,
+        .intr_type      = GPIO_INTR_DISABLE
+    };
+    if(gpio_config(&spi_image_cs_io_conf) != ESP_OK){
+        #if CUSTOM_GPIO_INIT_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_gpio_init() - SPI_IMAGE_GPIO_CS[%d] gpio_config() 초기화 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_IMAGE_GPIO_CS);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_gpio_states[SPI_IMAGE_GPIO_CS] = true;
 
+    // SPI 드라이버 초기화 전 SPI_CMD_GPIO_MOSI 핀에 풀업 설정하여 플로팅으로 인한 쓰레기값 유입 방지
+    #if CUSTOM_GPIO_INIT_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s custom_gpio_init() - SPI_CMD_GPIO_MOSI 핀 노이즈 방지를 위한 SPI_CMD_GPIO_MOSI[%d] 풀업 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_MOSI[%d] GPIO_MODE_INPUT 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_MOSI[%d] GPIO_PULLUP_ENABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_MOSI[%d] GPIO_PULLDOWN_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_MOSI);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_MOSI[%d] GPIO_INTR_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_MOSI);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    static const gpio_config_t spi_cmd_mosi_io_conf = {
+        .pin_bit_mask   = (1ULL << SPI_CMD_GPIO_MOSI),
+        .mode           = GPIO_MODE_INPUT,
+        .pull_up_en     = GPIO_PULLUP_ENABLE,       // 풀업 활성화로 노이즈 방지
+        .pull_down_en   = GPIO_PULLDOWN_DISABLE,
+        .intr_type      = GPIO_INTR_DISABLE
+    };
+    if(gpio_config(&spi_cmd_mosi_io_conf) != ESP_OK){
+        #if CUSTOM_GPIO_INIT_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_gpio_init() - SPI_CMD_GPIO_MOSI[%d] gpio_config() 초기화 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_MOSI);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_gpio_states[SPI_CMD_GPIO_MOSI] = true;
 
+    // SPI 드라이버 초기화 전 SPI_CMD_GPIO_SCLK 핀에 풀업 설정하여 플로팅으로 인한 쓰레기값 유입 방지
+    #if CUSTOM_GPIO_INIT_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s custom_gpio_init() - SPI_CMD_GPIO_SCLK 핀 노이즈 방지를 위한 SPI_CMD_GPIO_SCLK[%d] 풀업 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_SCLK[%d] GPIO_MODE_INPUT 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_SCLK[%d] GPIO_PULLUP_ENABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_SCLK[%d] GPIO_PULLDOWN_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_SCLK);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_SCLK[%d] GPIO_INTR_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_SCLK);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    static const gpio_config_t spi_cmd_sclk_io_conf = {
+        .pin_bit_mask   = (1ULL << SPI_CMD_GPIO_SCLK),
+        .mode           = GPIO_MODE_INPUT,
+        .pull_up_en     = GPIO_PULLUP_ENABLE,       // 풀업 활성화로 노이즈 방지
+        .pull_down_en   = GPIO_PULLDOWN_DISABLE,
+        .intr_type      = GPIO_INTR_DISABLE
+    };
+    if(gpio_config(&spi_cmd_sclk_io_conf) != ESP_OK){
+        #if CUSTOM_GPIO_INIT_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_gpio_init() - SPI_CMD_GPIO_SCLK[%d] gpio_config() 초기화 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_SCLK);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_gpio_states[SPI_CMD_GPIO_SCLK] = true;
+
+    // SPI 드라이버 초기화 전 SPI_CMD_GPIO_CS 핀에 풀업 설정하여 플로팅으로 인한 쓰레기값 유입 방지
+    #if CUSTOM_GPIO_INIT_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s custom_gpio_init() - SPI_CMD_GPIO_CS 핀 노이즈 방지를 위한 SPI_CMD_GPIO_CS[%d] 풀업 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_CS[%d] GPIO_MODE_INPUT 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_CS[%d] GPIO_PULLUP_ENABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_CS[%d] GPIO_PULLDOWN_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_CS);
+    printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s custom_gpio_init() - SPI_CMD_GPIO_CS[%d] GPIO_INTR_DISABLE 설정\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_CS);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    static const gpio_config_t spi_cmd_cs_io_conf = {
+        .pin_bit_mask   = (1ULL << SPI_CMD_GPIO_CS),
+        .mode           = GPIO_MODE_INPUT,
+        .pull_up_en     = GPIO_PULLUP_ENABLE,       // 풀업 활성화로 노이즈 방지
+        .pull_down_en   = GPIO_PULLDOWN_DISABLE,
+        .intr_type      = GPIO_INTR_DISABLE
+    };
+    if(gpio_config(&spi_cmd_cs_io_conf) != ESP_OK){
+        #if CUSTOM_GPIO_INIT_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_gpio_init() - SPI_CMD_GPIO_CS[%d] gpio_config() 초기화 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_gpio_TAG, SPI_CMD_GPIO_CS);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_gpio_states[SPI_CMD_GPIO_CS] = true;
 
     ////////////////////////////////////////////////
     /// DEBUG UART RX GPIO Pre-Init (노이즈 방지) ///

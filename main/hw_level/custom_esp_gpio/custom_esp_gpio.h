@@ -45,6 +45,66 @@
  * @{
  */
     /**
+    * @brief       SPI Image 수신 Host
+    * @details     SPI Image 수신 Host를 정의합니다
+    */
+    #define SPI_IMAGE_RCV_HOST              SPI2_HOST
+
+    /**
+    * @brief       SPI Image Clock GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 Clock GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_SCLK             GPIO_NUM_12
+
+    /**
+    * @brief       SPI Image MOSI GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 MOSI GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_MOSI             GPIO_NUM_11
+
+    /**
+    * @brief       SPI Image MISO GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 MISO GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_MISO             GPIO_NUM_13
+
+    /**
+    * @brief       SPI Image Chip Select GPIO Pin 번호
+    * @details     SPI Image 수신 Host의 Chip Select GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_IMAGE_GPIO_CS               GPIO_NUM_10
+
+    /**
+    * @brief       SPI 명령어 전송 Host
+    * @details     SPI 명령어 전송 Host를 정의합니다
+    */
+    #define SPI_CMD_RCV_HOST                SPI3_HOST
+
+    /**
+    * @brief       SPI 명령어 Clock GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 Clock GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_SCLK               GPIO_NUM_36
+
+    /**
+    * @brief       SPI 명령어 MOSI GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 MOSI GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_MOSI               GPIO_NUM_35
+
+    /**
+    * @brief       SPI 명령어 MISO GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 MISO GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_MISO               GPIO_NUM_37
+
+    /**
+    * @brief       SPI 명령어 Chip Select GPIO Pin 번호
+    * @details     SPI 명령어 전송 Host의 Chip Select GPIO Pin 번호를 정의합니다
+    */
+    #define SPI_CMD_GPIO_CS                 GPIO_NUM_39
+
+    /**
      * @brief       Debug UART 포트
      * @details     Debug UART 포트 설정
      */
