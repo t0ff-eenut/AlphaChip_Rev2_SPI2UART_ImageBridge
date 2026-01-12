@@ -2,7 +2,7 @@
  * @file        project_top.h
  * @brief       iSENSOR 프로젝트의 전역 설정 헤더 파일
  * @author      T0T
- * @date        2026-01-07
+ * @date        2025-08-21
  * @version     1.0.0
  * 
  * @details     이 파일은 iSENSOR 프로젝트의 매크로와 전역 설정을 정의함.
@@ -27,7 +27,7 @@
 #include "esp_pm.h"
 
 /*===========================================================================*/
-/* 메크로 정의
+/* 메크로 정의 */
 /*===========================================================================*/
 /**
  * @defgroup    ANSI_COLORS ANSI 텍스트 스타일 메크로 그룹
@@ -42,21 +42,18 @@
  * @{
  */
     /**
-    * @def         TEXT_BOLD
     * @brief       Bold체 (굵은 글씨)
     * @details     콘솔 텍스트를 Bold체로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define TEXT_BOLD       "\033[1m"
 
     /**
-    * @def         TEXT_UNDER_LINE
     * @brief       밑줄 (Underline)
     * @details     콘솔 텍스트에 밑줄을 추가하는 ANSI 이스케이프 시퀀스
     */
     #define TEXT_UNDER_LINE "\033[4m"
 
     /**
-    * @def         TEXT_REVERSE
     * @brief       반전 (Reverse Video)
     * @details     콘솔 텍스트의 전경색과 배경색을 반전시키는 ANSI 이스케이프 시퀀스
     * @todo        실제 사용 사례 확인 및 문서화
@@ -82,63 +79,54 @@
  * @{
  */
     /**
-    * @def         COLOR_BLACK
     * @brief       검은색 텍스트
     * @details     콘솔 텍스트를 검은색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_BLACK     "\033[30m"
 
     /**
-    * @def         COLOR_RED
     * @brief       빨간색 텍스트
     * @details     콘솔 텍스트를 빨간색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_RED       "\033[31m"
 
     /**
-    * @def         COLOR_GREEN
     * @brief       초록색 텍스트
     * @details     콘솔 텍스트를 초록색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_GREEN     "\033[32m"
 
     /**
-    * @def         COLOR_YELLOW
     * @brief       노란색 텍스트
     * @details     콘솔 텍스트를 노란색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_YELLOW    "\033[33m"
 
     /**
-    * @def         COLOR_BLUE
     * @brief       파란색 텍스트
     * @details     콘솔 텍스트를 파란색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_BLUE      "\033[34m"
 
     /**
-    * @def         COLOR_MAGENTA
     * @brief       보라색 (마젠타) 텍스트
     * @details     콘솔 텍스트를 보라색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_MAGENTA   "\033[35m"
 
     /**
-    * @def         COLOR_CYAN
     * @brief       청록색 (시안) 텍스트
     * @details     콘솔 텍스트를 청록색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_CYAN      "\033[36m"
 
     /**
-    * @def         COLOR_WHITE
     * @brief       흰색 텍스트
     * @details     콘솔 텍스트를 흰색으로 설정하는 ANSI 이스케이프 시퀀스
     */
     #define COLOR_WHITE     "\033[37m"
 
     /**
-    * @def         COLOR_RESET
     * @brief       텍스트 스타일 및 색상 초기화
     * @details     모든 ANSI 텍스트 속성을 기본값으로 리셋하는 이스케이프 시퀀스
     */
@@ -165,7 +153,6 @@
  * @{
  */
     /**
-    * @def         ns_sleep
     * @brief       나노초(ns) 단위의 Sleep 시간 값
     * @details     Sleep 시간을 나노초(ns) 단위로 조절하기 위한 매크로
     *              1 ns = 0.001 us
@@ -173,7 +160,6 @@
     #define ns_sleep    * ((1 us_sleep) / 1000)
 
     /**
-    * @def         us_sleep
     * @brief       마이크로초(us) 단위의 Sleep 시간 값
     * @details     Sleep 시간을 마이크로초(us) 단위로 조절하기 위한 매크로
     *              기본 단위로 사용됨
@@ -181,7 +167,6 @@
     #define us_sleep    * 1
 
     /**
-    * @def         ms_sleep
     * @brief       밀리초(ms) 단위의 Sleep 시간 값
     * @details     Sleep 시간을 밀리초(ms) 단위로 조절하기 위한 매크로
     *              1 ms = 1,000 us
@@ -189,7 +174,6 @@
     #define ms_sleep    * (1000 us_sleep)
 
     /**
-    * @def         s_sleep
     * @brief       초(s) 단위의 Sleep 시간 값
     * @details     Sleep 시간을 초(s) 단위로 조절하기 위한 매크로
     *              1 s = 1,000 ms = 1,000,000 us
@@ -197,7 +181,6 @@
     #define s_sleep     * (1000 ms_sleep)
 
     /**
-    * @def         m_sleep
     * @brief       분(m) 단위의 Sleep 시간 값
     * @details     Sleep 시간을 분(m) 단위로 조절하기 위한 매크로
     *              1 m = 60 s = 60,000,000 us
@@ -205,7 +188,6 @@
     #define m_sleep     * (60 s_sleep)
 
     /**
-    * @def         h_sleep
     * @brief       시(h) 단위의 Sleep 시간 값
     * @details     Sleep 시간을 시(h) 단위로 조절하기 위한 매크로
     *              1 h = 60 m = 3,600,000,000 us
@@ -214,7 +196,7 @@
 /** @} */ // end of SLEEP_MACROS
 
 /*===========================================================================*/
-/* 열거형 정의
+/* 열거형 정의 */
 /*===========================================================================*/
 /**
  * @enum        dble
@@ -230,14 +212,15 @@ typedef enum device_booting_level_enum{
     BOOTING_LEVEL_END,                  /* 3: 애플리케이션 종료 단계 - Deep Sleep 진입 준비 */
 }dble;
 
+
 /*===========================================================================*/
-/* 변수 정의
+/* 변수 정의 */
 /*===========================================================================*/
 extern esp_sleep_wakeup_cause_t g_esp_sleep_wakeup_cause;
 extern esp_err_t g_esp_err;
 
 /*===========================================================================*/
-/* 함수 정의
+/* 함수 정의 */
 /*===========================================================================*/
 /**
  * @defgroup    UTILITY_FUNCTIONS 유틸리티 함수 그룹
@@ -420,14 +403,12 @@ extern esp_err_t g_esp_err;
     * @{
     */
         /**
-        * @def         DEBUG
         * @brief       디버그 메세지 출력 활성화
         * @details     true로 설정 시 디버그 메시지 출력 활성화
         */
         #define DEBUG       true
 
         /**
-        * @def         PRINT_DELAY
         * @brief       디버그 메세지 출력 시 딜레이 활성화
         * @details     true로 설정 시 디버그 메시지 출력 시 딜레이
         */
@@ -438,7 +419,6 @@ extern esp_err_t g_esp_err;
         #endif
 
         /**
-        * @def         DEBUG_DELAY_TIME_MS
         * @brief       디버그 모드에서의 딜레이 시간 (밀리초)
         * @details     디버그 메시지 출력 간격 조절용 딜레이 시간
         */
@@ -457,7 +437,6 @@ extern esp_err_t g_esp_err;
     * @{
     */
         /**
-        * @def         NOTIFY_SHUTDOWN_BIT
         * @brief       Thread 종료 알림 비트
         * @details     이벤트 그룹에서 0번 비트를 종료 신호로 사용
         *              이 비트가 설정되면 Thread 종료 프로세스 시작
@@ -465,7 +444,6 @@ extern esp_err_t g_esp_err;
         #define NOTIFY_SHUTDOWN_BIT         (1 << 0)
 
         /**
-        * @def         NOTIFY_BUFFER_RESET_BIT
         * @brief       버퍼 리셋 알림 비트
         * @details     이벤트 그룹에서 8번 비트를 버퍼 리셋 신호로 사용
         *              이 비트가 설정되면 버퍼 초기화 수행
@@ -484,13 +462,11 @@ extern esp_err_t g_esp_err;
     * @{
     */
         /**
-        * @def         LED_STRIP_ENABLE
         * @brief       LED 스트립 기능 활성화
         * @details     ESP32C3 보드 타입에 따라 조건부로 설정됨
         *              - ESP32C3_SUPER_MINI: false (비활성화)
         *              - 기타 ESP32 보드: true (활성화)
         * @note        (참고) ESP32C3_SUPER_MINI의 경우 자동으로 False 설정됨
-        * @see         (Use) custom_esp_gpio.h
         */
         #if (CONFIG_IDF_TARGET_ESP32C3 && (ESP32C3 == ESP32C3_SUPER_MINI))
             #define LED_STRIP_ENABLE    false
@@ -510,7 +486,6 @@ extern esp_err_t g_esp_err;
     * @{
     */
         /**
-        * @def         MUTEX_TIMEOUT_MS
         * @brief       뮤텍스 타임아웃 시간 (밀리초)
         * @details     FreeRTOS 뮤텍스 획득 시도할 때, 최대 대기 시간
         * @see         (Use) custom_esp_queue.h
@@ -527,12 +502,11 @@ extern esp_err_t g_esp_err;
     * @details     
     * @{
     */
-        // /**
-        // * @def         SPI_BUFFER_SIZE
-        // * @brief       SPI 버퍼 크기
-        // * @details     SPI 버퍼 크기 (ESP-IDF 최소 요구: > 128)
-        // */
-        // #define SPI_BUFFER_SIZE                            256             // SPI 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+    /**
+    * @brief       SPI 이미지 수신 버퍼 크기
+    * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+    */
+    #define SPI_IMAGE_BUFFER_SIZE                            256             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
 
 
 

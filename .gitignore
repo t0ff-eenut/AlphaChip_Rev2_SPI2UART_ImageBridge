@@ -25,9 +25,9 @@ managed_components/
 dependencies.lock
 
 
-# Doxygen Generated Documentation
-docs/Doxygen/Output/
-docs/Doxygen/doxygen_warnings.log
+# # Doxygen Generated Documentation
+# docs/Doxygen/Output/
+# docs/Doxygen/doxygen_warnings.log
 
 
 

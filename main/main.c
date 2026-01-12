@@ -328,29 +328,29 @@ static bool initial(void){
     }
     b_A_init_states[INIT_LIST_SPI] = true;
 
-    ////////////////////////////
-    /// UART Booting Setting ///
-    ////////////////////////////
-    #if INITIAL_DEBUG
-    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s initial() - Custom UART Booting Setting\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-    #if PRINT_DELAY
-    ////////////////////////////////////////////////////////
-    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-    ////////////////////////////////////////////////////////
-    #endif
-    #endif
-    if(!custom_uart_init()){
-        #if INITIAL_DEBUG
-        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s initial() - custom_uart_init() Custom UART 설정 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-        #if PRINT_DELAY
-        ////////////////////////////////////////////////////////
-        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-        ////////////////////////////////////////////////////////
-        #endif
-        #endif
-        return false;
-    }
-    b_A_init_states[INIT_LIST_UART] = true;
+    // ////////////////////////////
+    // /// UART Booting Setting ///
+    // ////////////////////////////
+    // #if INITIAL_DEBUG
+    // printf("[%s] "COLOR_WHITE"[진행-OK]\t %s initial() - Custom UART Booting Setting\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    // #if PRINT_DELAY
+    // ////////////////////////////////////////////////////////
+    // vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    // ////////////////////////////////////////////////////////
+    // #endif
+    // #endif
+    // if(!custom_uart_init()){
+    //     #if INITIAL_DEBUG
+    //     printf("[%s] "COLOR_RED"[오류-ERROR]\t %s initial() - custom_uart_init() Custom UART 설정 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    //     #if PRINT_DELAY
+    //     ////////////////////////////////////////////////////////
+    //     vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    //     ////////////////////////////////////////////////////////
+    //     #endif
+    //     #endif
+    //     return false;
+    // }
+    // b_A_init_states[INIT_LIST_UART] = true;
 
     return true;
 }
@@ -368,59 +368,59 @@ static bool deinitial(void){
     // static envs envs_input_nvs_value;
     static bool b_success = true;
 
-    if(b_A_init_states[INIT_LIST_UART]){
-        ///////////////////////////
-        /// UART Ending Setting ///
-        ///////////////////////////
-        #if DEINITIAL_DEBUG
-        printf("[%s] "COLOR_WHITE"[진행-OK]\t %s deinitial() - custom_uart_deinit() UART 해제 시작\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-        #if PRINT_DELAY
-        ////////////////////////////////////////////////////////
-        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-        ////////////////////////////////////////////////////////
-        #endif
-        #endif
-        b_success &= custom_uart_deinit();
-        if(!b_success){
-            #if DEINITIAL_DEBUG
-            printf("[%s] "COLOR_RED"[오류-ERROR]\t %s deinitial() - custom_uart_deinit() UART 해제 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-            #if PRINT_DELAY
-            ////////////////////////////////////////////////////////
-            vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-            ////////////////////////////////////////////////////////
-            #endif
-            #endif
-            return b_success;
-        }
-        b_A_init_states[INIT_LIST_UART] = false;
+    // if(b_A_init_states[INIT_LIST_UART]){
+    //     ///////////////////////////
+    //     /// UART Ending Setting ///
+    //     ///////////////////////////
+    //     #if DEINITIAL_DEBUG
+    //     printf("[%s] "COLOR_WHITE"[진행-OK]\t %s deinitial() - custom_uart_deinit() UART 해제 시작\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    //     #if PRINT_DELAY
+    //     ////////////////////////////////////////////////////////
+    //     vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    //     ////////////////////////////////////////////////////////
+    //     #endif
+    //     #endif
+    //     b_success &= custom_uart_deinit();
+    //     if(!b_success){
+    //         #if DEINITIAL_DEBUG
+    //         printf("[%s] "COLOR_RED"[오류-ERROR]\t %s deinitial() - custom_uart_deinit() UART 해제 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    //         #if PRINT_DELAY
+    //         ////////////////////////////////////////////////////////
+    //         vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    //         ////////////////////////////////////////////////////////
+    //         #endif
+    //         #endif
+    //         return b_success;
+    //     }
+    //     b_A_init_states[INIT_LIST_UART] = false;
 
-    }
-    if(b_A_init_states[INIT_LIST_SPI]){
-        //////////////////////////
-        /// SPI Ending Setting ///
-        //////////////////////////
-        #if DEINITIAL_DEBUG
-        printf("[%s] "COLOR_WHITE"[진행-OK]\t %s deinitial() - custom_spi_deinit() SPI 해제 시작\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-        #if PRINT_DELAY
-        ////////////////////////////////////////////////////////
-        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-        ////////////////////////////////////////////////////////
-        #endif
-        #endif
-        b_success &= custom_spi_deinit();
-        if(!b_success){
-            #if DEINITIAL_DEBUG
-            printf("[%s] "COLOR_RED"[오류-ERROR]\t %s deinitial() - custom_spi_deinit() Custom SPI 종료 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-            #if PRINT_DELAY
-            ////////////////////////////////////////////////////////
-            vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-            ////////////////////////////////////////////////////////
-            #endif
-            #endif
-            return b_success;
-        }
-        b_A_init_states[INIT_LIST_SPI] = false;
-    }
+    // }
+    // if(b_A_init_states[INIT_LIST_SPI]){
+    //     //////////////////////////
+    //     /// SPI Ending Setting ///
+    //     //////////////////////////
+    //     #if DEINITIAL_DEBUG
+    //     printf("[%s] "COLOR_WHITE"[진행-OK]\t %s deinitial() - custom_spi_deinit() SPI 해제 시작\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    //     #if PRINT_DELAY
+    //     ////////////////////////////////////////////////////////
+    //     vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    //     ////////////////////////////////////////////////////////
+    //     #endif
+    //     #endif
+    //     b_success &= custom_spi_deinit();
+    //     if(!b_success){
+    //         #if DEINITIAL_DEBUG
+    //         printf("[%s] "COLOR_RED"[오류-ERROR]\t %s deinitial() - custom_spi_deinit() Custom SPI 종료 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    //         #if PRINT_DELAY
+    //         ////////////////////////////////////////////////////////
+    //         vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    //         ////////////////////////////////////////////////////////
+    //         #endif
+    //         #endif
+    //         return b_success;
+    //     }
+    //     b_A_init_states[INIT_LIST_SPI] = false;
+    // }
     if(b_A_init_states[INIT_LIST_GPIO]){
         ///////////////////////////
         /// GPIO Ending Setting ///

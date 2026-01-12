@@ -52,7 +52,7 @@
     * @details     SPI Image 수신 Host의 버스 크기를 정의합니다.
     * @note        Max 320 bit
     */
-    #define SPI_IMAGE_SPI_BUSTER_SIZE       (64 * 5)    // bit
+    #define SPI_IMAGE_SPI_BUSTER_BIT_COUNT       (64 * 5)    // bit
 
 /** @} */ // end of SPI_IMAGE_CONFIG
 
@@ -102,7 +102,7 @@
      * @brief       SPI 명령어 버스 크기
      * @details     SPI 명령어 전송 Host의 버스 크기를 정의합니다
      */
-    #define SPI_CMD_SPI_BUSTER_SIZE         8           // bit
+    #define SPI_CMD_SPI_BUSTER_BIT_COUNT         8           // bit
 
 /** @} */ // end of SPI_CONFIG
 
@@ -127,18 +127,52 @@
     // #define SPI_WRONG_WORD                  0X88
 /** @} */ // end of SPI_COMMEND_CONFIG
 
+#ifndef SPI_IMAGE_BUFFER_SIZE
+    /**
+    * @brief       SPI 이미지 수신 버퍼 크기
+    * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+    */
+    #define SPI_IMAGE_BUFFER_SIZE                            256             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+#endif
+
+// #define BUSTER_END_ADDRESS                                5
+/**
+* @brief       SPI Image 버스 크기
+* @details     SPI Image 버스 크기를 정의합니다
+* @todo     
+*/
+#define SPI_IMAGE_BUSTER_SIZE                               sizeof(uint64_t) * 5
+/**
+* @brief       
+* @details     
+* @todo     
+*/
+#define SPI_IMAGE_BUSTER_DATA_MAX                           4
+/**
+* @brief       
+* @details     
+* @todo     
+*/
+#define SPI_IMAGE_BUSTER_DATA_SIZE                          sizeof(uint64_t) * SPI_IMAGE_BUSTER_DATA_MAX
+/**
+* @brief       
+* @details     
+* @todo     
+*/
+#define SPI_IMAGE_END_ADDRESS                                128
+
 /**
  * @brief       SPI Image 수신 Thread Stack Size
  * @details     project_top.h에서 정의되지 않은 경우, 기본값 8KB 설정
  * @warning     사이즈 변경하지 말 것
  */
 #define SPI_IMAGE_RX_STACK_SIZE                     (1024 * 8)
-// /**
-//  * @brief       SPI Image 수신 Thread Stack Size
-//  * @details     project_top.h에서 정의되지 않은 경우, 기본값 8KB 설정
-//  * @warning     사이즈 변경하지 말 것
-//  */
-// #define SPI_IMAGE_RECIVE_DATA_PROCESS_STACK_SIZE    (1024 * 8)
+/**
+ * @brief       SPI Image 수신 데이터 재구성 Thread Stack Size
+ * @details     project_top.h에서 정의되지 않은 경우, 기본값 8KB 설정
+ * @warning     사이즈 변경하지 말 것
+ */
+#define SPI_IMAGE_RECEIVE_DATA_PROCESS_STACK_SIZE    (1024 * 8)
 // /**
 //  * @brief       SPI 명령어 전송 Thread Stack Size
 //  * @details     project_top.h에서 정의되지 않은 경우, 기본값 3KB 설정
@@ -161,6 +195,21 @@ typedef enum esp_spi_channel_id_enum{
     SPI_CH_MAX        /**< 2 : Max Channel */
 } escie;
 
+/**
+ * @enum        sirse
+ * @typedef     spi_image_rx_structure_enum
+ * @brief       SPI Image 수신 버퍼 구조 Enum
+ * @details     
+ */
+typedef enum spi_image_rx_structure_enum{
+    CMD_N_ADDR,     /**< 0 : Read RX Buster */
+    DATA_64BIT_0,   /**< 1 : 64bit Data */
+    DATA_64BIT_1,   /**< 2 : 64bit Data */
+    DATA_64BIT_2,   /**< 3 : 64bit Data */
+    DATA_64BIT_3,   /**< 4 : 64bit Data */
+    BUSTER_END_ADDRESS
+} sirse;
+
 /*===========================================================================*/
 /* 구조체 정의 */
 /*===========================================================================*/
@@ -182,6 +231,17 @@ typedef struct esp_spi_channel_config_struct{
     int flags;                /**< SPI 플래그 */
 } esccs;
 
+// /**
+//  * @struct      srics
+//  * @typedef     spi_rx_image_chunk_struct
+//  * @brief       SPI 이미지 수신 Chunk 구조체
+//  * @details     SPI 이미지 수신 Chunk 구조체
+//  */
+// typedef struct spi_rx_image_chunk_struct{
+//     uint8_t ui8_address;
+//     uint64_t* ui64_buster_rx_data;
+// } srics;
+
 /*===========================================================================*/
 /* 함수 정의 */
 /*===========================================================================*/
@@ -194,12 +254,54 @@ typedef struct esp_spi_channel_config_struct{
 bool custom_spi_init(void);
 
 /**
+ * @brief       custom_swap_endian_ui64() Function
+ * @param[in]   uint64_t    input_ui64
+ * @return      uint64_t    ui64_result
+ * @details     uint64_t를 뒤집는 함수
+ * @note        
+            // ui64_spi_recv_q_recv_320bit[0] : 0000000000000080 ::
+            // ui64_spi_recv_q_recv_320bit[0] : 0000000000000081 :: 
+            // 타겟
+            // ui64_spi_recv_q_recv_320bit[0] : 8000000000000000 ::
+            // ui64_spi_recv_q_recv_320bit[0] : 8100000000000000 :: 
+ */
+uint64_t custom_swap_endian_ui64(uint64_t input_ui64);
+
+/**
  * @brief       spi_image_rx_thread() Function
  * @attention   static
  * @param[in]   void
  * @return      void
  * @details     SPI Image 수신 Thread
  */
-static void spi_image_rx_thread(void *arg);
+static void custom_spi_image_rx_thread(void *arg);
+
+/**
+ * @brief       custom_spi_image_rx_process_thread() Function
+ * @attention   static
+ * @param[in]   void
+ * @return      void
+ * @details     SPI Image 수신 데이터 재구성 Thread
+ * @note        
+                // SPI 수신 데이터 버퍼(128 * 5) = 1Frame
+                //////////          //
+                // 64bit            //
+                // 64bit            //
+                // 64bit    320bit  //
+                // 64bit            //
+                // 64bit            //
+                //////////          //
+                //  .               //
+                //  .               //  128개   =   1Frame
+                //  .               //
+                //////////          //
+                // 64bit            //
+                // 64bit            //
+                // 64bit    320bit  //
+                // 64bit            //
+                // 64bit            //
+                //////////          //
+ */
+static void custom_spi_image_rx_process_thread(void *arg);
 
 #endif
