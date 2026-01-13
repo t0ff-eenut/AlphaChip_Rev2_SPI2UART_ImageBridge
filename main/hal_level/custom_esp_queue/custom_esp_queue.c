@@ -9,8 +9,8 @@
  */
 #include "custom_esp_queue.h"
 
-#define QUEUE_DEBUG         DEBUG
-// #define QUEUE_DEBUG         false
+// #define QUEUE_DEBUG         DEBUG
+#define QUEUE_DEBUG         false
 
 static const char *custom_esp_queue_TAG = "[@]custom_esp_queue.c";
 
@@ -257,7 +257,7 @@ cqrre custom_queue_safe_send(mpqs* input_p_mpqs, const void* input_p_v_data, Tic
         #endif
 
         // 큐에 데이터 전송, Mutex 내부에서 타임아웃 0으로 설정 (이미 Mutex에서 대기함)
-        BaseType_t send_result = xQueueSend(input_p_mpqs->QueueHandle_queue, input_p_v_data, 0);
+        BaseType_t send_result = xQueueSend(input_p_mpqs->QueueHandle_queue, input_p_v_data, 1);
         
         if(send_result == pdPASS){
             #if CUSTOM_QUEUE_SAFE_SEND_DEBUG
@@ -345,7 +345,7 @@ cqrre custom_queue_safe_receive(mpqs* input_p_mpqs, void* input_p_v_data, TickTy
         }
         else{
             // 큐에서 데이터 수신, Mutex 내부에서 타임아웃 0으로 설정
-            BaseType_t BaseType_receive_result = xQueueReceive(input_p_mpqs->QueueHandle_queue, input_p_v_data, 0);
+            BaseType_t BaseType_receive_result = xQueueReceive(input_p_mpqs->QueueHandle_queue, input_p_v_data, 1);
             
             if(BaseType_receive_result == pdPASS){
                 #if QUEUE_SAFE_RECEIVE_DEBUG
@@ -417,9 +417,7 @@ UBaseType_t custom_queue_safe_messages_waiting(mpqs* input_p_mpqs){
         return 0;
     }
 
-
-
-    if(xSemaphoreTake(input_p_mpqs->SemaphoreHandle_mutex, portMAX_DELAY) == pdTRUE){
+    if(xSemaphoreTake(input_p_mpqs->SemaphoreHandle_mutex, 1) == pdTRUE){
         count = uxQueueMessagesWaiting(input_p_mpqs->QueueHandle_queue);
         xSemaphoreGive(input_p_mpqs->SemaphoreHandle_mutex);
     }
@@ -458,7 +456,7 @@ bool custom_mpqs_queue_reset(mpqs* input_p_mpqs){
         return false;
     }
 
-    if(xSemaphoreTake(input_p_mpqs->SemaphoreHandle_mutex, portMAX_DELAY) == pdTRUE){
+    if(xSemaphoreTake(input_p_mpqs->SemaphoreHandle_mutex, 1) == pdTRUE){
         if(!xQueueReset(input_p_mpqs->QueueHandle_queue)){
             #if CUSTOM_MPQS_QUEUE_RESET_DEBUG
             printf("[%s] "COLOR_RED"[오류-ERROR]\t %s custom_queue_safe_receive() - queue reset 실패\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_queue_TAG);

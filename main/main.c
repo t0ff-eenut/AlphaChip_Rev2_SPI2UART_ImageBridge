@@ -208,6 +208,10 @@ void app_main(void) {
                 custom_pwm_set_duty(PWM_CH_BLUE_LED, (100 * custom_pwm_get_max_duty(PWM_CH_BLUE_LED)) / 100);
                 #endif
 
+                while(true){
+                    vTaskDelay(custom_ms_to_delay(2000));
+                }
+
                 // imss_return_value = custom_image_processing_start();
 
                 // if(!imss_return_value.b_thread_start){
@@ -237,6 +241,7 @@ void app_main(void) {
                 //         #endif
                 //     }
                 // }
+                
                 dble_boot_level = BOOTING_LEVEL_END;
             }
             

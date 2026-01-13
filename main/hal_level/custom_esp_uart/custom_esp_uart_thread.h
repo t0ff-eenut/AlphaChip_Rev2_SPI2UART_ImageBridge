@@ -112,7 +112,7 @@
 //      * @brief       Upload Log Port Baud Rate
 //      * @details     Upload Log Port에서 사용할 Baud Rate
 //      */
-//     #define UPLOAD_LOG_PORT_BAUD_RATE_SEL   BAUD_RATE_1500000
+//     #define UPLOAD_LOG_PORT_BAUD_RATE_SEL   BAUD_RATE_2000000
 // /** @} */ // end of BAUD_RATE
 
 // #ifndef DEBUG_UART_PORT

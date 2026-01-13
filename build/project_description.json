@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "AlphaChip_Rev2_SPI2UART_ImageBridge",
-    "project_version":    "b6532a9-dirty",
+    "project_version":    "b350d9d-dirty",
     "project_path":       "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge",
     "idf_path":           "C:/Users/FW_1/esp/v5.3.4/esp-idf",
     "build_dir":          "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build",
@@ -17,7 +17,7 @@
     "min_rev":            "0",
     "max_rev":            "99",
     "phy_data_partition": "",
-    "monitor_baud" :      "115200",
+    "monitor_baud" :      "2000000",
     "monitor_toolprefix": "xtensa-esp32s3-elf-",
     "c_compiler":         "C:/Users/FW_1/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc.exe",
     "config_environment" : {
@@ -790,7 +790,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_tinyusb", "espressif__led_strip" ],
             "file": "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/build/CMakeFiles/3.24.0/CompilerIdC/CMakeCCompilerId.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_queue/custom_esp_queue.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_spi/custom_esp_spi_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_uart/custom_esp_uart_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hw_level/custom_esp_gpio/custom_esp_gpio.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/main.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/project_top.c" ],
+            "sources": [ "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_queue/custom_esp_queue.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_spi/custom_esp_spi_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_uart/custom_esp_uart_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hw_level/custom_esp_gpio/custom_esp_gpio.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/main.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/project_top.c" ],
             "include_dirs": [ ".", "hw_level", "hw_level/custom_esp_gpio", "hal_level", "hal_level/custom_esp_queue", "hal_level/custom_esp_uart", "hal_level/custom_esp_spi" ]
         },
         "mbedtls": {

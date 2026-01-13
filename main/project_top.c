@@ -173,7 +173,8 @@ float custom_f_abs(float f_a, float f_b){
     return (f_a > f_b) ? f_a - f_b : f_b - f_a;
 }
 
-
+// CONFIG_FREERTOS_HZ=100
+// 1 tick = 1000ms / 100 = 10ms
 int custom_tick_to_delay(int input_i_tick){
     return pdTICKS_TO_MS(input_i_tick);
 }

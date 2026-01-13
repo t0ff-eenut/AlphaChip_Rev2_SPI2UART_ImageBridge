@@ -502,11 +502,11 @@ extern esp_err_t g_esp_err;
     * @details     
     * @{
     */
-    /**
-    * @brief       SPI 이미지 수신 버퍼 크기
-    * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
-    */
-    #define SPI_IMAGE_BUFFER_SIZE                            256             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+        // /**
+        // * @brief       SPI 이미지 수신 버퍼 크기
+        // * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+        // */
+        // #define SPI_IMAGE_BUFFER_LENGTH                            128 * 10             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
 
 
 

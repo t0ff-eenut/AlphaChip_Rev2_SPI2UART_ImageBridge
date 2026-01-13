@@ -127,39 +127,47 @@
     // #define SPI_WRONG_WORD                  0X88
 /** @} */ // end of SPI_COMMEND_CONFIG
 
-#ifndef SPI_IMAGE_BUFFER_SIZE
-    /**
-    * @brief       SPI 이미지 수신 버퍼 크기
-    * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
-    */
-    #define SPI_IMAGE_BUFFER_SIZE                            256             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
-#endif
 
-// #define BUSTER_END_ADDRESS                                5
+#define SPI_IMAGE_BUSTER_END_ADDRESS                        5
 /**
 * @brief       SPI Image 버스 크기
 * @details     SPI Image 버스 크기를 정의합니다
 * @todo     
 */
-#define SPI_IMAGE_BUSTER_SIZE                               sizeof(uint64_t) * 5
+#define SPI_IMAGE_BUSTER_SIZE                               sizeof(uint64_t) * SPI_IMAGE_BUSTER_END_ADDRESS
 /**
 * @brief       
 * @details     
 * @todo     
 */
-#define SPI_IMAGE_BUSTER_DATA_MAX                           4
+#define SPI_IMAGE_BUSTER_END_DATA_ARRAY                     4
 /**
 * @brief       
 * @details     
 * @todo     
 */
-#define SPI_IMAGE_BUSTER_DATA_SIZE                          sizeof(uint64_t) * SPI_IMAGE_BUSTER_DATA_MAX
+#define SPI_IMAGE_BUSTER_DATA_SIZE                          sizeof(uint64_t) * SPI_IMAGE_BUSTER_END_DATA_ARRAY
 /**
 * @brief       
 * @details     
 * @todo     
 */
-#define SPI_IMAGE_END_ADDRESS                                128
+#define SPI_IMAGE_END_ADDRESS                               128
+/**
+* @brief       
+* @details     
+* @todo     
+*/
+#define SPI_IMAGE_MAX_COUNT                                 10
+
+
+#ifndef SPI_IMAGE_BUFFER_LENGTH
+    /**
+    * @brief       SPI 이미지 수신 버퍼 크기
+    * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+    */
+    #define SPI_IMAGE_BUFFER_LENGTH                            SPI_IMAGE_END_ADDRESS * SPI_IMAGE_MAX_COUNT             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+#endif
 
 /**
  * @brief       SPI Image 수신 Thread Stack Size
@@ -171,8 +179,14 @@
  * @brief       SPI Image 수신 데이터 재구성 Thread Stack Size
  * @details     project_top.h에서 정의되지 않은 경우, 기본값 8KB 설정
  * @warning     사이즈 변경하지 말 것
+ * @note        SPI_IMAGE_BUSTER_DATA_SIZE = sizeof(uint64_t) * 4 = 32
+ *              SPI_IMAGE_END_ADDRESS = 128
+ *              배열 요소 수 = 32 * 128 = 4096 개의 uint64_t
+ *              스택 사용량 = 4096 × 8 bytes = 32,768 bytes = 32KB!!
+ *              스택 크기 = 8KB ← 부족!
  */
-#define SPI_IMAGE_RECEIVE_DATA_PROCESS_STACK_SIZE    (1024 * 8)
+// #define SPI_IMAGE_RECEIVE_DATA_PROCESS_STACK_SIZE    (1024 * 8)      8KB
+#define SPI_IMAGE_RECEIVE_DATA_PROCESS_STACK_SIZE    (1024 * 48)
 // /**
 //  * @brief       SPI 명령어 전송 Thread Stack Size
 //  * @details     project_top.h에서 정의되지 않은 경우, 기본값 3KB 설정
@@ -202,12 +216,12 @@ typedef enum esp_spi_channel_id_enum{
  * @details     
  */
 typedef enum spi_image_rx_structure_enum{
-    CMD_N_ADDR,     /**< 0 : Read RX Buster */
-    DATA_64BIT_0,   /**< 1 : 64bit Data */
-    DATA_64BIT_1,   /**< 2 : 64bit Data */
-    DATA_64BIT_2,   /**< 3 : 64bit Data */
-    DATA_64BIT_3,   /**< 4 : 64bit Data */
-    BUSTER_END_ADDRESS
+    CMD_N_ADDR,         /**< 0 : Read RX Buster */
+    DATA_64BIT_0,       /**< 1 : 64bit Data */
+    DATA_64BIT_1,       /**< 2 : 64bit Data */
+    DATA_64BIT_2,       /**< 3 : 64bit Data */
+    DATA_64BIT_3,       /**< 4 : 64bit Data */
+    // BUSTER_END_ADDRESS  /**< 5 : Buster End Address */
 } sirse;
 
 /*===========================================================================*/

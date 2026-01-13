@@ -1,0 +1,4 @@
+Component config
+  └─ ESP System Settings
+      └─ Channel for console output (UART)
+          └─ UART console baud rate
