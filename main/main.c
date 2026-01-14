@@ -1,3 +1,4 @@
+// Component config → ESP System Settings → Main task stack size : 6144 -> 16384
 /**
  * @file        main.c
  * @brief       iSENSOR 프로젝트의 시작 코드 파일
@@ -8,7 +9,7 @@
  * @details     (주)아이센(iSEN)에서 개발한 AlphaChip Rev.2의 RAW Image Data를 수신받아 재구성하여 UART를 통해 PC로 송신하는 ESP32 동작 Firmware Code
  */
 
-#include "hw_level_handle.h"         // HAL Level 통합 헤더 사용
+#include "app_level_handle.h"         // HAL Level 통합 헤더 사용
 
 /**
  * @brief       메인 함수 디버깅 여부
@@ -208,40 +209,12 @@ void app_main(void) {
                 custom_pwm_set_duty(PWM_CH_BLUE_LED, (100 * custom_pwm_get_max_duty(PWM_CH_BLUE_LED)) / 100);
                 #endif
 
-                while(true){
-                    vTaskDelay(custom_ms_to_delay(2000));
-                }
-
-                // imss_return_value = custom_image_processing_start();
-
-                // if(!imss_return_value.b_thread_start){
-                //     if(!imss_return_value.b_occupancy){
-                //         #if MAIN_DEBUG
-                //         printf("[%s] "COLOR_RED"[오류-ERROR]\t %s app_main() - custom_iSENSOR_mode_start() - Mode Thread 실행 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-                //         #endif
-                //     }
-                //     else{
-                //         #if MAIN_DEBUG
-                //         printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_main() - custom_iSENSOR_mode_start() - FIRST_ON\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-                //         #endif
-                //     }
+                // while(true){
+                //     vTaskDelay(custom_ms_to_delay(2000));
                 // }
-                // else{
-                //     #if MAIN_DEBUG
-                //     printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_main() - custom_iSENSOR_mode_start() - 정상 종료\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-                //     #endif
-                //     if(!imss_return_value.b_occupancy){
-                //         #if MAIN_DEBUG
-                //         printf("[%s] "COLOR_YELLOW"[경고-WARNING]\t %s app_main() - custom_iSENSOR_mode_start() - 재실 인식 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-                //         #endif
-                //     }
-                //     else{
-                //         #if MAIN_DEBUG
-                //         printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_main() - custom_iSENSOR_mode_start() - 재실 인식 성공\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-                //         #endif
-                //     }
-                // }
-                
+
+                app_image_processing_start();
+
                 dble_boot_level = BOOTING_LEVEL_END;
             }
             

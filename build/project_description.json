@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "AlphaChip_Rev2_SPI2UART_ImageBridge",
-    "project_version":    "a32760a-dirty",
+    "project_version":    "12f87d6-dirty",
     "project_path":       "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge",
     "idf_path":           "C:/Users/FW_1/esp/v5.3.4/esp-idf",
     "build_dir":          "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build",
@@ -790,8 +790,8 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_tinyusb", "espressif__led_strip" ],
             "file": "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_queue/custom_esp_queue.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_spi/custom_esp_spi_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_uart/custom_esp_uart_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hw_level/custom_esp_gpio/custom_esp_gpio.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/main.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/project_top.c" ],
-            "include_dirs": [ ".", "hw_level", "hw_level/custom_esp_gpio", "hal_level", "hal_level/custom_esp_queue", "hal_level/custom_esp_uart", "hal_level/custom_esp_spi" ]
+            "sources": [ "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/app_level/app_image_processing/app_image_processing.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_queue/custom_esp_queue.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_spi/custom_esp_spi_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hal_level/custom_esp_uart/custom_esp_uart_thread.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/hw_level/custom_esp_gpio/custom_esp_gpio.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/main.c", "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/main/project_top.c" ],
+            "include_dirs": [ ".", "hw_level", "hw_level/custom_esp_gpio", "hal_level", "hal_level/custom_esp_queue", "hal_level/custom_esp_uart", "hal_level/custom_esp_spi", "app_level", "app_level/app_image_processing" ]
         },
         "mbedtls": {
             "alias": "idf::mbedtls",
@@ -2206,7 +2206,7 @@
             "priv_reqs": [ "espressif__esp_tinyusb", "espressif__led_strip" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_tinyusb", "espressif__led_strip" ],
-            "include_dirs": [ ".", "hw_level", "hw_level/custom_esp_gpio", "hal_level", "hal_level/custom_esp_queue", "hal_level/custom_esp_uart", "hal_level/custom_esp_spi" ]
+            "include_dirs": [ ".", "hw_level", "hw_level/custom_esp_gpio", "hal_level", "hal_level/custom_esp_queue", "hal_level/custom_esp_uart", "hal_level/custom_esp_spi", "app_level", "app_level/app_image_processing" ]
         },
         "espressif__esp_tinyusb": {
             "alias": "idf::espressif__esp_tinyusb",

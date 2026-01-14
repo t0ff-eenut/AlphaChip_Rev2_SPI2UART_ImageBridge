@@ -12,8 +12,8 @@ INCLUDE_DIRS
     "hal_level/custom_esp_queue"
     "hal_level/custom_esp_uart"
     "hal_level/custom_esp_spi"
-    # "app_level"
-    # "app_level/image_processing"
+    "app_level"
+    "app_level/app_image_processing"
 REQUIRES 
     driver 
 #     esp_adc 

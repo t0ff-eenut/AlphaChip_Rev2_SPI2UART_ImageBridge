@@ -266,6 +266,17 @@ typedef struct esp_spi_channel_config_struct{
 //     uint64_t* ui64_buster_rx_data;
 // } srics;
 
+/**
+ * @struct      rgis
+ * @typedef     return_get_image_struct
+ * @brief       
+ * @details     
+ */
+typedef struct return_get_image_struct{
+    cqrre cqrre_value;                      /**< SQueue 상태 확인 값 */
+    uint64_t ui64_image_value[(SPI_IMAGE_BUSTER_END_DATA_ARRAY) * SPI_IMAGE_END_ADDRESS];             /**< SPI 이미지 값 */
+} rgis;
+
 /*===========================================================================*/
 /* 함수 정의 */
 /*===========================================================================*/
@@ -327,5 +338,13 @@ static void custom_spi_image_rx_thread(void *arg);
                 //////////          //
  */
 static void custom_spi_image_rx_process_thread(void *arg);
+
+/**
+ * @brief       custom_get_spi_image() Function
+ * @param[in]   void
+ * @return      rgis
+ * @details     SPI Image 전송
+ */
+rgis custom_get_spi_image(void);
 
 #endif
