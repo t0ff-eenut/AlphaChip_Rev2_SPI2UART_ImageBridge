@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "AlphaChip_Rev2_SPI2UART_ImageBridge",
-    "project_version":    "b350d9d-dirty",
+    "project_version":    "a32760a-dirty",
     "project_path":       "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge",
     "idf_path":           "C:/Users/FW_1/esp/v5.3.4/esp-idf",
     "build_dir":          "C:/Users/FW_1/Desktop/Debug_250819/AlphaChip_Rev2_SPI2UART_ImageBridge/build",

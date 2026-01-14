@@ -1,3 +1,13 @@
+/**
+ * @file        custom_esp_spi_thread.h
+ * @brief       ESP32의 SPI Pin 할당 및 제어 헤더 파일
+ * @author      T0T
+ * @date        2026-01-14
+ * @version     1.0.0
+ *
+ * @details     iSENSOR Occupancy Sensor에서 ADC 버퍼 및 설정값을 SPI를 통해 전송하는 모듈
+ *              Queue를 통해 전송 요청을 받아서 해당하는 데이터를 직렬화하여 전송
+ */
 #ifndef CUSTOM_ESP_SPI_THREAD_H
 #define CUSTOM_ESP_SPI_THREAD_H
 
@@ -106,26 +116,26 @@
 
 /** @} */ // end of SPI_CONFIG
 
-/**
-* @defgroup    SPI_COMMEND_CONFIG SPI 커멘드 설정 그룹
-* @brief       SPI 커멘드 설정
-* @details     
-* @note        
-* @{
-*/
-    /**
-    * @brief       SPI 명령어 버스의 첫 번째 단어
-    * @details     SPI 명령어 버스의 첫 번째 단어를 정의합니다
-    * @note        0xA5 = 0b 1010_0101
-    */
-    #define SPI_FIRST_WORD                  0XA5
-    // /**
-    //  * @def         SPI_WRONG_WORD
-    //  * @brief       SPI 명령어 버스의 잘못된 단어
-    //  * @details     SPI 명령어 버스의 잘못된 단어를 정의합니다
-    //  */
-    // #define SPI_WRONG_WORD                  0X88
-/** @} */ // end of SPI_COMMEND_CONFIG
+// /**
+// * @defgroup    SPI_COMMEND_CONFIG SPI 커멘드 설정 그룹
+// * @brief       SPI 커멘드 설정
+// * @details     
+// * @note        
+// * @{
+// */
+//     /**
+//     * @brief       SPI 명령어 버스의 첫 번째 단어
+//     * @details     SPI 명령어 버스의 첫 번째 단어를 정의합니다
+//     * @note        0xA5 = 0b 1010_0101
+//     */
+//     #define SPI_FIRST_WORD                  0XA5
+//     // /**
+//     //  * @def         SPI_WRONG_WORD
+//     //  * @brief       SPI 명령어 버스의 잘못된 단어
+//     //  * @details     SPI 명령어 버스의 잘못된 단어를 정의합니다
+//     //  */
+//     // #define SPI_WRONG_WORD                  0X88
+// /** @} */ // end of SPI_COMMEND_CONFIG
 
 
 #define SPI_IMAGE_BUSTER_END_ADDRESS                        5

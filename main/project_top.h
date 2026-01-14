@@ -20,8 +20,11 @@
 
 #include "esp_log.h"
 #include "esp_sleep.h"
+
+#include "esp_task_wdt.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+
 #include <string.h>
 #include "esp_timer.h"
 #include "esp_pm.h"
