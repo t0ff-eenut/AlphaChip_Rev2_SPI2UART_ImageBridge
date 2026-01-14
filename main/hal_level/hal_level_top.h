@@ -16,7 +16,7 @@
 
 // // HAL Level 모듈 포함
 // #include "custom_esp_queue.h"
-// #include "custom_esp_spi_thread.h"
-// #include "custom_esp_uart_thread.h"
+#include "custom_esp_spi_thread.h"
+#include "custom_esp_uart_thread.h"
 
 #endif // HAL_LEVEL_TOP_H

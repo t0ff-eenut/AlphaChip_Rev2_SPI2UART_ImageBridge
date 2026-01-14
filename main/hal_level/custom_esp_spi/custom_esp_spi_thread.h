@@ -137,6 +137,8 @@
 //     // #define SPI_WRONG_WORD                  0X88
 // /** @} */ // end of SPI_COMMEND_CONFIG
 
+#define IMAGE_WIDTH     64
+#define IMAGE_HEIGHT    64
 
 #define SPI_IMAGE_BUSTER_END_ADDRESS                        5
 /**
@@ -267,15 +269,15 @@ typedef struct esp_spi_channel_config_struct{
 // } srics;
 
 /**
- * @struct      rgis
- * @typedef     return_get_image_struct
+ * @struct      rgsis
+ * @typedef     return_get_spi_image_struct
  * @brief       
  * @details     
  */
-typedef struct return_get_image_struct{
+typedef struct return_get_spi_image_struct{
     cqrre cqrre_value;                      /**< SQueue 상태 확인 값 */
     uint64_t ui64_image_value[(SPI_IMAGE_BUSTER_END_DATA_ARRAY) * SPI_IMAGE_END_ADDRESS];             /**< SPI 이미지 값 */
-} rgis;
+} rgsis;
 
 /*===========================================================================*/
 /* 함수 정의 */

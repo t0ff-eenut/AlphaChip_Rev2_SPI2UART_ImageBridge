@@ -26,6 +26,7 @@
 //     GENERATE_SETTER(value_type, func_suffix, value_name); \
 //     GENERATE_GETTER(value_type, func_suffix, value_name);
 
+
 /*===========================================================================*/
 /* 열거형 정의
 /*===========================================================================*/
@@ -37,6 +38,7 @@
  */
 typedef enum image_processing_status_level_enum{
     MODE_START,
+    MAKE_FRAME_MALLOC,
     READ_IMAGE_TO_SPI,
     REMAKE_IMAGE,
     SEND_IMAGE_TO_UART,

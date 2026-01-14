@@ -34,6 +34,7 @@ static volatile TaskHandle_t TaskHandle_custom_spi_image_rx_process_thread = NUL
  * @details     SPI 수신 큐 (uint64_t*)
  */
 static mpqs mpqs_spi_image_rx;
+
 /**
  * @brief       SPI Image To App 큐
  * @details     SPI Image To App 큐 (uint64_t*)
@@ -353,8 +354,8 @@ static void custom_spi_image_rx_process_thread(void *arg){
             #endif
         }
         else{
-            cqrre cqrre_spi_image_rx_result = custom_queue_safe_receive(&mpqs_spi_image_rx, &A_ui64_spi_recvbuf, 1);
-            if(cqrre_spi_image_rx_result == QUEUE_IS_READY){
+            cqrre cqrre_spi_image_rx_receive_result = custom_queue_safe_receive(&mpqs_spi_image_rx, &A_ui64_spi_recvbuf, 1);
+            if(cqrre_spi_image_rx_receive_result == QUEUE_IS_READY){
                 // Endian Swap
                 for (sirse sirse_index = CMD_N_ADDR; sirse_index < SPI_IMAGE_BUSTER_END_ADDRESS; sirse_index++){
                     A_ui64_spi_recvbuf[sirse_index] = custom_swap_endian_ui64(A_ui64_spi_recvbuf[sirse_index]);
@@ -393,10 +394,10 @@ static void custom_spi_image_rx_process_thread(void *arg){
 
                         if(A_ui64_image_data != NULL){
                             // Frame 정리 후 Queue 전송 (포인터의 주소를 전달!)
-                            cqrre cqrre_spi_image_application_send_result = custom_queue_safe_send(&mpqs_spi_image_to_app, &A_ui64_image_data, 0);
-                            if(cqrre_spi_image_application_send_result != QUEUE_IS_READY){
+                            cqrre cqrre_spi_image_to_app_send_result = custom_queue_safe_send(&mpqs_spi_image_to_app, &A_ui64_image_data, 0);
+                            if(cqrre_spi_image_to_app_send_result != QUEUE_IS_READY){
                                 #if CUSTOM_SPI_IMAGE_RX_PROCESS_THREAD_DEBUG
-                                printf("[%s] "COLOR_RED"[오류-ERROR]\t %s [Thread] custom_spi_image_rx_process_thread() - SPI Image 전송 실패 (-> mpqs_spi_image_to_app) (cqrre_spi_image_application_send_result=%d)\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_spi_TAG, cqrre_spi_image_application_send_result);
+                                printf("[%s] "COLOR_RED"[오류-ERROR]\t %s [Thread] custom_spi_image_rx_process_thread() - SPI Image 전송 실패 (-> mpqs_spi_image_to_app) (cqrre_spi_image_to_app_send_result=%d)\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_spi_TAG, cqrre_spi_image_to_app_send_result);
                                 #endif
                                 // 전송 실패 시에만 메모리 해제
                                 vPortFree(A_ui64_image_data);
@@ -478,16 +479,16 @@ static void custom_spi_image_rx_process_thread(void *arg){
 } // END adc_buf
 
 // iSENSOR_Mode에서 사용
-rgis custom_get_spi_image(void){
-    #define CUSTOM_GET_SPI_IMAGE_DEBUG         SPI_IMAGE_DEBUG
+rgsis custom_get_spi_image(void){
+    #define CUSTOM_GET_SPI_IMAGE_DEBUG         SPI_DEBUG
 
-    rgis rgis_value = {QUEUE_IS_ERROR, {0,}};
-    static uint64_t* ui64_receive_spi_image_value = NULL;
+    rgsis rgsis_value = {QUEUE_IS_ERROR, {0,}};
+    static uint64_t* A_ui64_receive_spi_image_value = NULL;
 
     // ★ Mutex 보호 큐 수신 (Thread-Safe)
-    rgis_value.cqrre_value = custom_queue_safe_receive(&mpqs_spi_image_to_app, &ui64_receive_spi_image_value, 1);
-    if(rgis_value.cqrre_value == QUEUE_IS_READY){
-        #if 1
+    rgsis_value.cqrre_value = custom_queue_safe_receive(&mpqs_spi_image_to_app, &A_ui64_receive_spi_image_value, 1);
+    if(rgsis_value.cqrre_value == QUEUE_IS_READY){
+        #if 0
         printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s [Thread] custom_get_spi_image() - ui64_receive_spi_image 내용 : \n" COLOR_RESET, custom_getRuntimeString(), custom_esp_spi_TAG);
         // for (int i_addr_index = 0; i_addr_index < SPI_IMAGE_END_ADDRESS; i_addr_index++) {
         //     for (sirse sirse_index = CMD_N_ADDR; sirse_index < SPI_IMAGE_BUSTER_END_DATA_ARRAY; sirse_index++) {
@@ -496,16 +497,15 @@ rgis custom_get_spi_image(void){
         //     printf("\n");
         // }
         for (int i_addr_index = 0; i_addr_index < (SPI_IMAGE_END_ADDRESS * SPI_IMAGE_BUSTER_END_DATA_ARRAY); i_addr_index++) {
-            printf("[%d]: 0x%016llX\n", i_addr_index, ui64_receive_spi_image_value[i_addr_index]);
+            printf("[%d]: 0x%016llX\n", i_addr_index, A_ui64_receive_spi_image_value[i_addr_index]);
         }
         #endif
-
-        memcpy(rgis_value.ui64_image_value, ui64_receive_spi_image_value, sizeof(rgis_value.ui64_image_value));
-        // rgis_value.ui64_image_value = *ui64_receive_spi_image_value;
-        vPortFree(ui64_receive_spi_image_value); 
-        ui64_receive_spi_image_value = NULL;
+        memcpy(rgsis_value.ui64_image_value, A_ui64_receive_spi_image_value, sizeof(rgsis_value.ui64_image_value));
+        // rgis_value.ui64_image_value = *A_ui64_receive_spi_image_value;
+        vPortFree(A_ui64_receive_spi_image_value); 
+        A_ui64_receive_spi_image_value = NULL;
     }
-    return rgis_value;
+    return rgsis_value;
 }
 
 
