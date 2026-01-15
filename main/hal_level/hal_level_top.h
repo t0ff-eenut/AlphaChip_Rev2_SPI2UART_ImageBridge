@@ -14,9 +14,9 @@
 
 #include "hw_level_handle.h"
 
-// // HAL Level 모듈 포함
+// HAL Level 모듈 포함 (순서 중요: Queue가 먼저 정의되어야 함)
 // #include "custom_esp_queue.h"
-#include "custom_esp_spi_thread.h"
-#include "custom_esp_uart_thread.h"
+// #include "custom_esp_spi_thread.h"
+// #include "custom_esp_uart_thread.h"
 
 #endif // HAL_LEVEL_TOP_H

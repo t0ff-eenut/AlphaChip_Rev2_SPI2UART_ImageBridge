@@ -137,8 +137,8 @@
 //     // #define SPI_WRONG_WORD                  0X88
 // /** @} */ // end of SPI_COMMEND_CONFIG
 
-#define IMAGE_WIDTH     64
-#define IMAGE_HEIGHT    64
+// #define IMAGE_WIDTH     64
+// #define IMAGE_HEIGHT    64
 
 #define SPI_IMAGE_BUSTER_END_ADDRESS                        5
 /**
@@ -164,7 +164,7 @@
 * @details     
 * @todo     
 */
-#define SPI_IMAGE_END_ADDRESS                               128
+#define SPI_IMAGE_MAX_ADDRESS                               128
 /**
 * @brief       
 * @details     
@@ -178,7 +178,7 @@
     * @brief       SPI 이미지 수신 버퍼 크기
     * @details     SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
     */
-    #define SPI_IMAGE_BUFFER_LENGTH                            SPI_IMAGE_END_ADDRESS * SPI_IMAGE_MAX_COUNT             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
+    #define SPI_IMAGE_BUFFER_LENGTH                            SPI_IMAGE_MAX_ADDRESS * SPI_IMAGE_MAX_COUNT             // SPI 이미지 수신 버퍼 크기 (ESP-IDF 최소 요구: > 128)
 #endif
 
 /**
@@ -192,7 +192,7 @@
  * @details     project_top.h에서 정의되지 않은 경우, 기본값 8KB 설정
  * @warning     사이즈 변경하지 말 것
  * @note        SPI_IMAGE_BUSTER_DATA_SIZE = sizeof(uint64_t) * 4 = 32
- *              SPI_IMAGE_END_ADDRESS = 128
+ *              SPI_IMAGE_MAX_ADDRESS = 128
  *              배열 요소 수 = 32 * 128 = 4096 개의 uint64_t
  *              스택 사용량 = 4096 × 8 bytes = 32,768 bytes = 32KB!!
  *              스택 크기 = 8KB ← 부족!
@@ -269,14 +269,26 @@ typedef struct esp_spi_channel_config_struct{
 // } srics;
 
 /**
+ * @struct      send_spi_image_to_app_struct
+ * @typedef     send_spi_image_to_app_struct
+ * @brief       
+ * @details     
+ */
+typedef struct send_spi_image_to_app_struct{
+    uint8_t     ui8_end_address;                    /**< SPI 이미지 끝 주소 */
+    uint64_t*   ui64_image_value;             /**< SPI 이미지 값 */
+} ssitas;
+
+/**
  * @struct      rgsis
  * @typedef     return_get_spi_image_struct
  * @brief       
  * @details     
  */
 typedef struct return_get_spi_image_struct{
-    cqrre cqrre_value;                      /**< SQueue 상태 확인 값 */
-    uint64_t ui64_image_value[(SPI_IMAGE_BUSTER_END_DATA_ARRAY) * SPI_IMAGE_END_ADDRESS];             /**< SPI 이미지 값 */
+    cqrre       cqrre_value;                        /**< SQueue 상태 확인 값 */
+    uint8_t     ui8_end_address;                    /**< SPI 이미지 끝 주소 */
+    uint64_t    ui64_image_value[(SPI_IMAGE_BUSTER_END_DATA_ARRAY) * SPI_IMAGE_MAX_ADDRESS];             /**< SPI 이미지 값 */
 } rgsis;
 
 /*===========================================================================*/
@@ -344,9 +356,9 @@ static void custom_spi_image_rx_process_thread(void *arg);
 /**
  * @brief       custom_get_spi_image() Function
  * @param[in]   void
- * @return      rgis
+ * @return      rgsis
  * @details     SPI Image 전송
  */
-rgis custom_get_spi_image(void);
+rgsis custom_get_spi_image(void);
 
 #endif

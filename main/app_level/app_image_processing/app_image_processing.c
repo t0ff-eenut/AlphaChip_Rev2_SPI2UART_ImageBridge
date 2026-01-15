@@ -1,10 +1,10 @@
-    //      COLS (= IMAGE_WIDTH)
+    //      COLS (= ui8_width)
     //     ◄─────────────────────►
     // ┌───┬───┬───┬───┬───┬───┬───┐  ▲
     // │   │   │   │   │   │   │   │  │
     // ├───┼───┼───┼───┼───┼───┼───┤  │
     // │   │   │   │   │   │   │   │  │ ROWS
-    // ├───┼───┼───┼───┼───┼───┼───┤  │ (= IMAGE_HEIGHT)
+    // ├───┼───┼───┼───┼───┼───┼───┤  │ (= ui8_height)
     // │   │   │   │   │   │   │   │  │
     // └───┴───┴───┴───┴───┴───┴───┘  ▼
 /**
@@ -39,10 +39,16 @@ void app_image_processing_start(void){
     #define APP_IMAGE_PROCESSING_START_DEBUG         APP_IMAGE_PROCESSING_DEBUG
 
     static rgsis rgsis_value;  // static으로 선언하여 스택 오버플로우 방지 (BSS 섹션에 할당)
-    static rsuis rsuis_value;
-    bool b_while_end = false;
+    static uint8_t ui8_height = 0;
+    static uint8_t ui8_width = 0;
 
     uint8_t **A_ui8_frame_buf = NULL;
+
+    static ruifas ruifas_value;
+    static rguis rguis_value;
+
+    bool b_while_end = false;
+
 
     while(!b_while_end){
         switch(ipsle_image_processing_status_level){
@@ -51,40 +57,6 @@ void app_image_processing_start(void){
                     #if APP_IMAGE_PROCESSING_START_DEBUG
                     printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - MODE_START\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
                     #endif
-                    ipsle_image_processing_status_level = MAKE_FRAME_MALLOC;
-                }
-            
-            case MAKE_FRAME_MALLOC:
-                if(ipsle_image_processing_status_level == MAKE_FRAME_MALLOC){
-                    #if APP_IMAGE_PROCESSING_START_DEBUG
-                    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - MAKE_FRAME_MALLOC\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
-                    #endif
-
-                    A_ui8_frame_buf = (uint8_t**)pvPortMalloc(IMAGE_HEIGHT * sizeof(uint8_t*));
-                    if(A_ui8_frame_buf == NULL){
-                        // 메모리 할당 실패 처리
-                        #if APP_IMAGE_PROCESSING_START_DEBUG
-                        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s app_image_processing_start() - A_ui8_frame_buf 할당 실패\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
-                        #endif
-                        continue; // 다시 반복 시작
-                    }
-                    // 각 행에 대해 열(column) 할당
-                    for(int i = 0; i < IMAGE_HEIGHT; i++) {
-                        A_ui8_frame_buf[i] = (uint8_t*)pvPortMalloc(IMAGE_WIDTH * sizeof(uint8_t));
-                        if(A_ui8_frame_buf[i] == NULL) {
-                            // 이전에 할당한 메모리 해제 후 오류 처리
-                            for(int j = 0; j < i; j++) {
-                                vPortFree(A_ui8_frame_buf[j]);
-                            }
-                            vPortFree(A_ui8_frame_buf);
-                            #if APP_IMAGE_PROCESSING_START_DEBUG
-                            printf("[%s] "COLOR_RED"[오류-ERROR]\t %s app_image_processing_start() - A_ui8_frame_buf 할당 실패\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
-                            #endif
-                            continue;
-                        }
-                        memset(A_ui8_frame_buf[i], 0, IMAGE_WIDTH * sizeof(uint8_t));
-                    }
-
                     ipsle_image_processing_status_level = READ_IMAGE_TO_SPI;
                 }
 
@@ -93,6 +65,7 @@ void app_image_processing_start(void){
                     #if APP_IMAGE_PROCESSING_START_DEBUG
                     printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - READ_IMAGE_TO_SPI\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
                     #endif
+
                     rgsis_value = custom_get_spi_image();
                     
                     if(rgsis_value.cqrre_value == QUEUE_IS_READY){
@@ -106,7 +79,7 @@ void app_image_processing_start(void){
                         }
                         #endif
                         // break;
-                        ipsle_image_processing_status_level = REMAKE_IMAGE;
+                        ipsle_image_processing_status_level = MAKE_FRAME_MALLOC;
                     }
                     else if(rgsis_value.cqrre_value == QUEUE_IS_EMPTY){
                         // 큐가 비어있으면
@@ -125,7 +98,49 @@ void app_image_processing_start(void){
                         break;
                     }
                 }   
-                
+                        
+            case MAKE_FRAME_MALLOC:
+                if(ipsle_image_processing_status_level == MAKE_FRAME_MALLOC){
+                    #if APP_IMAGE_PROCESSING_START_DEBUG
+                    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - MAKE_FRAME_MALLOC\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                    #endif
+                    if(rgsis_value.ui8_end_address < 32){
+                        ui8_height = 16;
+                        ui8_width = 16;
+                    }
+                    else{
+                        ui8_height = 64;
+                        ui8_width = 64;
+                    }
+
+                    A_ui8_frame_buf = (uint8_t**)pvPortMalloc(ui8_height * sizeof(uint8_t*));
+                    if(A_ui8_frame_buf == NULL){
+                        // 메모리 할당 실패 처리
+                        #if APP_IMAGE_PROCESSING_START_DEBUG
+                        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s app_image_processing_start() - A_ui8_frame_buf 할당 실패\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                        #endif
+                        continue; // 다시 반복 시작
+                    }
+                    // 각 행에 대해 열(column) 할당
+                    for(int i = 0; i < ui8_height; i++) {
+                        A_ui8_frame_buf[i] = (uint8_t*)pvPortMalloc(ui8_width * sizeof(uint8_t));
+                        if(A_ui8_frame_buf[i] == NULL) {
+                            // 이전에 할당한 메모리 해제 후 오류 처리
+                            for(int j = 0; j < i; j++) {
+                                vPortFree(A_ui8_frame_buf[j]);
+                            }
+                            vPortFree(A_ui8_frame_buf);
+                            #if APP_IMAGE_PROCESSING_START_DEBUG
+                            printf("[%s] "COLOR_RED"[오류-ERROR]\t %s app_image_processing_start() - A_ui8_frame_buf 할당 실패\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                            #endif
+                            continue;
+                        }
+                        memset(A_ui8_frame_buf[i], 0, ui8_width * sizeof(uint8_t));
+                    }
+
+                    ipsle_image_processing_status_level = REMAKE_IMAGE;
+                }
+
             case REMAKE_IMAGE:
                 if(ipsle_image_processing_status_level == REMAKE_IMAGE){
                     #if APP_IMAGE_PROCESSING_START_DEBUG
@@ -133,20 +148,21 @@ void app_image_processing_start(void){
                     #endif
 
                     // 2D 배열 포인터로 캐스팅 (복사 없이 빠름)
-                    uint8_t (*p_image)[IMAGE_WIDTH] = (uint8_t (*)[IMAGE_WIDTH])rgsis_value.ui64_image_value;
+                    uint8_t (*p_image)[ui8_width] = (uint8_t (*)[ui8_width])rgsis_value.ui64_image_value;
+                    #if 0
                     // 픽셀 접근
-                    printf("GEN FRAME\n");
-                    for (int y = 0; y < IMAGE_HEIGHT; y++) {
-                        for (int x = 0; x < IMAGE_WIDTH; x++) {
+                    printf("REMAKE_IMAGE : GEN FRAME\n");
+                    for (int y = 0; y < ui8_height; y++) {
+                        for (int x = 0; x < ui8_width; x++) {
                             A_ui8_frame_buf[y][x] = p_image[y][x];
                             printf("[%d]  ", A_ui8_frame_buf[y][x]);
                         }
                         printf("\n");
                     }
+                    #endif
 
-                    ipsle_image_processing_status_level = READ_IMAGE_TO_SPI;
+                    ipsle_image_processing_status_level = SEND_IMAGE_TO_UART;
                     break;
-                    // ipsle_image_processing_status_level = SEND_IMAGE_TO_UART;
                 }
 
             case SEND_IMAGE_TO_UART:
@@ -154,31 +170,15 @@ void app_image_processing_start(void){
                     #if APP_IMAGE_PROCESSING_START_DEBUG
                     printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - SEND_IMAGE_TO_UART\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
                     #endif
-                    
 
-                    // // Frame 정리 후 Queue 전송 (포인터의 주소를 전달!)
-                    // cqrre cqrre_spi_image_application_send_result = custom_queue_safe_send(&mpqs_uart_image_from_app, &A_ui8_frame_buf, 0);
-                    // if(cqrre_spi_image_application_send_result != QUEUE_IS_READY){
-                    //     #if CUSTOM_SPI_IMAGE_RX_PROCESS_THREAD_DEBUG
-                    //     printf("[%s] "COLOR_RED"[오류-ERROR]\t %s [Thread] custom_spi_image_rx_process_thread() - SPI Image 전송 실패 (-> mpqs_spi_image_to_app) (cqrre_spi_image_application_send_result=%d)\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_spi_TAG, cqrre_spi_image_application_send_result);
-                    //     #endif
-                    //     // 전송 실패 시에만 메모리 해제
-                    //     vPortFree(A_ui64_image_data);
-                    //     A_ui64_image_data = NULL;
-                    // }
-                    // else{
-                    //     #if CUSTOM_SPI_IMAGE_RX_PROCESS_THREAD_DEBUG
-                    //     printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s [Thread] custom_spi_image_rx_process_thread() - SPI Image 전송 성공 (-> mpqs_spi_image_to_app) 개수 : %d\n" COLOR_RESET, custom_getRuntimeString(), custom_esp_spi_TAG, custom_queue_safe_messages_waiting(&mpqs_spi_image_to_app));
-                    //     #endif
-                    //     // 전송 성공 시 소유권 이전 (수신측에서 해제)
-                    //     A_ui64_image_data = NULL;
-                    // }
-                    rsuis_value.cqrre_value = QUEUE_IS_ERROR;
-                    rsuis_value.A_ui8_uart_frame_buf = A_ui8_frame_buf;
-                    custom_set_uart_image(rsuis_value);
-                    if(rsuis_value.cqrre_value == QUEUE_IS_READY){
+                    // rguis_value.cqrre_value = QUEUE_IS_ERROR;
+                    ruifas_value.ui8_height = ui8_height;
+                    ruifas_value.ui8_width = ui8_width;
+                    ruifas_value.A_ui8_uart_frame_buf = A_ui8_frame_buf;
+                    cqrre cqrre_value = custom_set_uart_image(ruifas_value);
+                    if(cqrre_value == QUEUE_IS_READY){
                         #if APP_IMAGE_PROCESSING_START_DEBUG
-                        printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - 보내기 성공\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                        printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - UART로 이미지 보내기 성공\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
                         #endif
                         #if 0
                         printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s app_image_processing_start() - rgsis_value.ui64_image_value 내용 : \n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
@@ -187,33 +187,103 @@ void app_image_processing_start(void){
                         }
                         #endif
                         // break;
-                        for(int j = 0; j < IMAGE_HEIGHT; j++) {
-                            vPortFree(A_ui8_frame_buf[j]);
-                        }
-                        vPortFree(A_ui8_frame_buf);
-                        A_ui8_frame_buf = NULL;
-                        ipsle_image_processing_status_level = REMAKE_IMAGE;
+                        // ipsle_image_processing_status_level = FREE_FRAME_MALLOC;
                     }
-                    else if(rgsis_value.cqrre_value == QUEUE_IS_FULL){
+                    else if(cqrre_value == QUEUE_IS_FULL){
                         // 큐가 비어있으면
                         #if APP_IMAGE_PROCESSING_START_DEBUG
                         printf("[%s] "COLOR_YELLOW"[경고-WARNING]\t %s custom_queue_safe_receive() - 큐 가득 차 있음\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
                         #endif
                         vTaskDelay(custom_ms_to_delay(50));
-                        break;
+                        // break;
                     }
                     else{
                         #if APP_IMAGE_PROCESSING_START_DEBUG
                         printf("[%s] "COLOR_YELLOW"[경고-WARNING]\t %s custom_queue_safe_receive() - 큐 Error\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
                         #endif
                         vTaskDelay(custom_ms_to_delay(50));
-                        break;
+                        // break;
                     }
-
-                    // custom_request_uart_tx(UART_TX_ADC_RAW_BUFFER);
-                    ipsle_image_processing_status_level = MAKE_FRAME_MALLOC;
+                    // ipsle_image_processing_status_level = FREE_FRAME_MALLOC;
+                    ipsle_image_processing_status_level = VIEW_UART_DATA;
                 }
-                
+            
+            case VIEW_UART_DATA:
+                if(ipsle_image_processing_status_level == VIEW_UART_DATA){
+                    #if APP_IMAGE_PROCESSING_START_DEBUG
+                    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - VIEW_UART_DATA\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                    #endif
+
+                    rguis_value = custom_get_uart_image();
+                    // printf("[%s] "COLOR_BLACK"[정보-INFO]\t %s app_image_processing_start() - rguis_value 내용 : \n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                    // // for (int i_addr_index = 0; i_addr_index < SPI_IMAGE_END_ADDRESS; i_addr_index++) {
+                    // //     for (sirse sirse_index = CMD_N_ADDR; sirse_index < SPI_IMAGE_BUSTER_END_DATA_ARRAY; sirse_index++) {
+                    // //         printf(" [%d][%d](%d): 0x%016llX\n", i_addr_index, sirse_index, (SPI_IMAGE_BUSTER_END_DATA_ARRAY * i_addr_index) + sirse_index, ui64_receive_spi_image_value[(SPI_IMAGE_BUSTER_END_DATA_ARRAY * i_addr_index) + sirse_index]);
+                    // //     }
+                    // //     printf("\n");
+                    // // }
+                    // // for (int i_pixel_index = 0; i_pixel_index < rguis_value.ui8_height * rguis_value.ui8_width; i_pixel_index++) {
+                    // //     printf("[%d][%d] 0x%02X ", i_pixel_index / rguis_value.ui8_width, i_pixel_index % rguis_value.ui8_width, rguis_value.A_ui8_uart_frame_buf[i_pixel_index / rguis_value.ui8_width][i_pixel_index % rguis_value.ui8_width]);
+                    // //     if(i_pixel_index % rguis_value.ui8_width == rguis_value.ui8_width - 1){
+                    // //         printf("\n");
+                    // //     }
+                    // // }
+                    // printf("UART FRAME\n");
+                    // for (int y = 0; y < ui8_height; y++) {
+                    //     for (int x = 0; x < ui8_width; x++) {
+                    //         printf("[%d]", rguis_value.A_ui8_uart_frame_buf[y][x]);
+                    //     }
+                    //     printf("\n");
+                    // }
+
+                    #if 0
+                    // 두 2D 배열 비교 (64x64)
+                    bool b_is_equal = true;
+                    int i_diff_count = 0;
+                    for (int y = 0; y < 64 && b_is_equal; y++) {
+                        for (int x = 0; x < 64; x++) {
+                            if (A_ui8_frame_buf[y][x] != rguis_value.A_ui8_uart_frame_buf[y][x]) {
+                                printf("불일치! [%d][%d]: A_ui8_frame_buf=%d, rguis_value=%d\n", 
+                                    y, x, 
+                                    A_ui8_frame_buf[y][x], 
+                                    rguis_value.A_ui8_uart_frame_buf[y][x]);
+                                i_diff_count++;
+                                // b_is_equal = false;  // 첫 불일치에서 멈추려면 주석 해제
+                                // break;
+                            }
+                        }
+                    }
+                    if (i_diff_count == 0) {
+                        printf("✓ 두 배열이 완전히 동일합니다!\n");
+                    } else {
+                        printf("✗ 총 %d개 불일치 발견\n", i_diff_count);
+                    }
+                    #endif
+
+
+                    // ipsle_image_processing_status_level = READ_IMAGE_TO_SPI;
+                    ipsle_image_processing_status_level = FREE_FRAME_MALLOC;
+                    break;
+                }
+
+            case FREE_FRAME_MALLOC:
+                if(ipsle_image_processing_status_level == FREE_FRAME_MALLOC){
+                    #if APP_IMAGE_PROCESSING_START_DEBUG
+                    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s app_image_processing_start() - FREE_FRAME_MALLOC\n" COLOR_RESET, custom_getRuntimeString(), app_image_processing_TAG);
+                    #endif
+
+                    for(int j = 0; j < ui8_height; j++) {
+                        vPortFree(A_ui8_frame_buf[j]);
+                    }
+                    vPortFree(A_ui8_frame_buf);
+                    A_ui8_frame_buf = NULL;
+
+                    // ipsle_image_processing_status_level = VIEW_UART_DATA;
+                    ipsle_image_processing_status_level = READ_IMAGE_TO_SPI;
+                    
+                    break;
+                }
+
             case MODE_END:
                 if(ipsle_image_processing_status_level == MODE_END){
                     #if APP_IMAGE_PROCESSING_START_DEBUG

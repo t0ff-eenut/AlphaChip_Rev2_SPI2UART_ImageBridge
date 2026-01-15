@@ -306,29 +306,29 @@ static bool initial(void){
     }
     b_A_init_states[INIT_LIST_SPI] = true;
 
-    // ////////////////////////////
-    // /// UART Booting Setting ///
-    // ////////////////////////////
-    // #if INITIAL_DEBUG
-    // printf("[%s] "COLOR_WHITE"[진행-OK]\t %s initial() - Custom UART Booting Setting\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-    // #if PRINT_DELAY
-    // ////////////////////////////////////////////////////////
-    // vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-    // ////////////////////////////////////////////////////////
-    // #endif
-    // #endif
-    // if(!custom_uart_init()){
-    //     #if INITIAL_DEBUG
-    //     printf("[%s] "COLOR_RED"[오류-ERROR]\t %s initial() - custom_uart_init() Custom UART 설정 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
-    //     #if PRINT_DELAY
-    //     ////////////////////////////////////////////////////////
-    //     vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
-    //     ////////////////////////////////////////////////////////
-    //     #endif
-    //     #endif
-    //     return false;
-    // }
-    // b_A_init_states[INIT_LIST_UART] = true;
+    ////////////////////////////
+    /// UART Booting Setting ///
+    ////////////////////////////
+    #if INITIAL_DEBUG
+    printf("[%s] "COLOR_WHITE"[진행-OK]\t %s initial() - Custom UART Booting Setting\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+    #if PRINT_DELAY
+    ////////////////////////////////////////////////////////
+    vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+    ////////////////////////////////////////////////////////
+    #endif
+    #endif
+    if(!custom_uart_init()){
+        #if INITIAL_DEBUG
+        printf("[%s] "COLOR_RED"[오류-ERROR]\t %s initial() - custom_uart_init() Custom UART 설정 실패\n" COLOR_RESET, custom_getRuntimeString(), main_TAG);
+        #if PRINT_DELAY
+        ////////////////////////////////////////////////////////
+        vTaskDelay(custom_ms_to_delay(DEBUG_DELAY_TIME_MS)); ///
+        ////////////////////////////////////////////////////////
+        #endif
+        #endif
+        return false;
+    }
+    b_A_init_states[INIT_LIST_UART] = true;
 
     return true;
 }

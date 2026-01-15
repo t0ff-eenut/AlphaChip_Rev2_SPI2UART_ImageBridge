@@ -20,26 +20,47 @@
 * @details     
 * @todo     
 */
-#define UART_IMAGE_MAX_COUNT                                 20
+#define UART_IMAGE_MAX_COUNT    10
 
 /*===========================================================================*/
 /* 구조체 정의 */
 /*===========================================================================*/
-typedef struct return_set_uart_image_struct{
-    cqrre cqrre_value;                      /**< SQueue 상태 확인 값 */
+
+/**
+ * @struct      send_spi_image_to_app_struct
+ * @typedef     send_spi_image_to_app_struct
+ * @brief       
+ * @details     
+ */
+typedef struct receive_uart_image_from_app_struct{
+    uint8_t ui8_height;
+    uint8_t ui8_width;
     uint8_t** A_ui8_uart_frame_buf;              /**< 이미지 버퍼 */
-} rsuis;
+} ruifas;
+
+// typedef struct return_set_uart_image_struct{
+//     uint8_t ui8_height;
+//     uint8_t ui8_width;
+//     uint8_t A_ui8_uart_frame_buf[64][64];              /**< 이미지 버퍼 */
+// } rsuis;
+
+typedef struct return_get_uart_image_struct{
+    cqrre cqrre_value;                      /**< SQueue 상태 확인 값 */
+    uint8_t ui8_height;
+    uint8_t ui8_width;
+    uint8_t A_ui8_uart_frame_buf[64][64];              /**< 이미지 버퍼 */
+} rguis;
 
 /*===========================================================================*/
 /* 함수 정의 */
 /*===========================================================================*/
 /**
  * @brief       custom_set_uart_image Function
- * @param[in]   rsuis input_rsuis
- * @return      void
+ * @param[in]   ruifas input_ruifas
+ * @return      cqrre
  * @details     
  */
-void custom_set_uart_image(rsuis input_rsuis);
+cqrre custom_set_uart_image(ruifas input_ruifas);
 
 /**
  * @brief       custom_set_uart_image Function
@@ -47,6 +68,6 @@ void custom_set_uart_image(rsuis input_rsuis);
  * @return      void
  * @details     
  */
-rsuis custom_get_uart_image(void){
+rguis custom_get_uart_image(void);
 
 #endif

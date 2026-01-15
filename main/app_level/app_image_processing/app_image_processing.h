@@ -25,7 +25,8 @@
 // #define GENERATE_GETTER_SETTER(value_type, func_suffix, value_name) \
 //     GENERATE_SETTER(value_type, func_suffix, value_name); \
 //     GENERATE_GETTER(value_type, func_suffix, value_name);
-
+#define IMAGE_WIDTH     64
+#define IMAGE_HEIGHT    64
 
 /*===========================================================================*/
 /* 열거형 정의
@@ -38,10 +39,12 @@
  */
 typedef enum image_processing_status_level_enum{
     MODE_START,
-    MAKE_FRAME_MALLOC,
     READ_IMAGE_TO_SPI,
+    MAKE_FRAME_MALLOC,
     REMAKE_IMAGE,
     SEND_IMAGE_TO_UART,
+    VIEW_UART_DATA,
+    FREE_FRAME_MALLOC,
     MODE_END,
 }ipsle;
 
