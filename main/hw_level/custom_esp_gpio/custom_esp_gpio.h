@@ -114,13 +114,13 @@
      * @brief       Debug UART TXD 핀
      * @details     Debug UART TXD 핀 설정
      */
-    #define DEBUG_TXD_GPIO_NUM                  GPIO_NUM_17
+    #define DEBUG_TXD_GPIO_NUM                  GPIO_NUM_1
 
     /**
      * @brief       Debug UART RXD 핀
      * @details     Debug UART RXD 핀 설정
      */
-    #define DEBUG_RXD_GPIO_NUM                  GPIO_NUM_18
+    #define DEBUG_RXD_GPIO_NUM                  GPIO_NUM_2
 
     /**
      * @brief       Upload Log UART 포트
